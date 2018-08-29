@@ -31,7 +31,7 @@
 #include <klib.h>
 #include "portio.h"
 #include "util.hpp"
-#include <sys/types.h>
+#include <stdint.h>
 namespace{
     class ThreadSceduler{
 

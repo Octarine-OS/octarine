@@ -29,7 +29,7 @@
 #ifndef TERMINAL_H
 #define TERMINAL_H
 
-#include <sys/types.h>
+#include <stdint.h>
 
 class Terminal {
     uint8_t hpos, vpos;

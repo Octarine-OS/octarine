@@ -28,7 +28,7 @@
 
 #ifndef MM_H
 #define MM_H
-#include <sys/types.h>
+#include <stdint.h>
 
 #define MAX_MAPPINGS 64
 

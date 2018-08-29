@@ -28,7 +28,7 @@
 
 #define KLIB_NO_INLINE
 
-#include <sys/types.h>
+#include <stddef.h>
 #include <klib.h>
 
 void* memset(void *p, int val, size_t sz){

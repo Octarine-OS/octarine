@@ -29,7 +29,7 @@
 #ifndef IO_KEYCODES_H
 #define IO_KEYCODES_H
 
-#include <sys/types.h>
+#include <stdint.h>
 
 typedef uint8_t keycode_t;
 

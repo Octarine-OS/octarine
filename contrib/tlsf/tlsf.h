@@ -19,8 +19,8 @@
 #ifndef _TLSF_H_
 #define _TLSF_H_
 
-#include <sys/types.h>
-// /#include <stdint.h>
+#include <stdint.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {

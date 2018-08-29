@@ -29,7 +29,7 @@
 #ifndef PORTIO_H
 #define PORTIO_H
 
-#include <sys/types.h>
+#include <stdint.h>
 
 
  __attribute__((always_inline)) static inline void outb(uint16_t port, uint8_t val) {

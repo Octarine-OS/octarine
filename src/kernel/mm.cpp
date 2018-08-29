@@ -27,7 +27,7 @@
  */
 
 #include <bioscall.h>
-#include <sys/types.h>
+#include <stdint.h>
 #include <tlsf.h>
 #include "mm.h"
 #include "portio.h"

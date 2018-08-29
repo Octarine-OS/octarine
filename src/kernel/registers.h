@@ -29,7 +29,7 @@
 #ifndef REGISTERS_H
 #define REGISTERS_H
 
-#include <sys/types.h>
+#include <stdint.h>
 
 //WARNING - editing this requires changing include/core/kernel/registers.mac
 typedef struct {

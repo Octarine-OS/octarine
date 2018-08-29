@@ -29,7 +29,7 @@
 #ifndef UTIL_HPP
 #define UTIL_HPP
 
-#include <sys/types.h>
+#include <stdint.h>
 
 void shittyHexStr(uint16_t val, char *buff);
 
