@@ -1,0 +1,61 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Copyright (c) 2018, Devin Nakamura
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; 1. Redistributions of source code must retain the above copyright notice, this
+;    list of conditions and the following disclaimer.
+; 2. Redistributions in binary form must reproduce the above copyright notice,
+;    this list of conditions and the following disclaimer in the documentation
+;    and/or other materials provided with the distribution.
+;
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+; DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+; FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+; DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+; OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+; OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+;
+; SPDX-License-Identifier: BSD-2-Clause
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;Contains the GDT
+
+align 8
+GDT:
+; First GDT entry is null and never refrenced, so we use it as a place to store the gdt descriptor
+dw GDT_end - GDT - 1 ;length of GDT
+dd GDT ;pointer to start of GDT
+dw 0 ;pad out to length of GDT entry
+
+
+; -- code segment --
+; base = 0x00000000, limit = 0xFFFFF (4 KiB Granularity), present
+; type = 32bit code execute/read, DPL = 0
+dw 0xFFFF, 0
+db 0, 0x9A, 0xCF, 0
+
+; -- data segment --
+; base = 0x00000000, limit 0xFFFFF (4 KiB Granularity), present
+; type = 32 bit data read/write, DPL = 0
+dw 0xFFFF, 0
+db 0, 0x92, 0xCF, 0
+
+; -- 16 bit real mode CS --
+; base = 0x00000000, limit 0x0FFFF (1 B Granularity), present
+; type = 16 bit code execute/read only/conforming, DPL = 0
+dw 0xFFFF, 0
+db 0, 0x9E, 0, 0
+
+; -- 16 bit real mode DS --
+; base = 0x00000000, limit 0x0FFFF (1 B Granularity), present
+; type = 16 bit data read/write, DPL = 0
+dw 0xFFFF, 0
+db 0, 0x92, 0, 0
+GDT_end:
