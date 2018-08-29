@@ -20,18 +20,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 include_directories (${octarine_SOURCE_DIR}/include/)
 
 
+include(arch/${OCTARINE_TARGET_ARCH}/CMakeLists.txt)
+
 add_subdirectory(contrib)
 
 add_subdirectory(src/klib)
 add_subdirectory(src/kernel)
-add_subdirectory(src/boot)
-#add_subdirectory(src/commands)
 
-#add_custom_command(OUTPUT stage1.bin
-#                    COMMAND nasm -fbin -i ${CMAKE_CURRENT_LIST_DIR}/ ${CMAKE_CURRENT_LIST_DIR}/boot/stage1.asm -o stage1.bin
-#                    MAIN_DEPENDENCY ${CMAKE_CURRENT_LIST_DIR}/boot/stage1.asm)
 
-#nasm_bin(boot/stage1.asm stage1.bin)
 if(OCTARINE_MULTIBOOT)
 	set(STAGE2_LDSCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/multiboot.ld" )
 else()
@@ -66,4 +62,3 @@ add_custom_command(
     COMMAND i686-elf-strip -g stage2.bin
 )
 add_custom_target(stage2 ALL DEPENDS stage2.bin)
-

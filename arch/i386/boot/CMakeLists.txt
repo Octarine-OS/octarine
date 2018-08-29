@@ -25,10 +25,10 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
-set(STAGE1_SRCS src/boot/stage1.asm PARENT_SCOPE)
+set(STAGE1_SRCS ${CMAKE_CURRENT_LIST_DIR}/stage1.asm)
 
 if(OCTARINE_MULTIBOOT)
-	set(BOOT_SRCS src/boot/multiboot.asm PARENT_SCOPE)
+	set(BOOT_SRCS ${CMAKE_CURRENT_LIST_DIR}/multiboot.asm)
 else()
-	set(BOOT_SRCS src/boot/stage2.asm PARENT_SCOPE)
+	set(BOOT_SRCS ${CMAKE_CURRENT_LIST_DIR}/stage2.asm)
 endif()
