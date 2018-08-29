@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.12)
 include(cmake/asm.cmake)
 
 project(octarine)
@@ -19,46 +19,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 include_directories (${octarine_SOURCE_DIR}/include/)
 
+# set up some inf
 
-include(arch/${OCTARINE_TARGET_ARCH}/CMakeLists.txt)
+
+add_subdirectory(arch)
 
 add_subdirectory(contrib)
 
 add_subdirectory(src/klib)
 add_subdirectory(src/kernel)
-
-
-if(OCTARINE_MULTIBOOT)
-	set(STAGE2_LDSCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/multiboot.ld" )
-else()
-	set(STAGE2_LDSCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/linker.ld" )
-endif()
-
-add_executable(stage1.bin ${STAGE1_SRCS})
-set_target_properties(stage1.bin
-                      PROPERTIES
-                      LINKER_LANGUAGE "ASM_NASM"
-                      LINK_FLAGS "-T${CMAKE_CURRENT_SOURCE_DIR}/stage1.ld -melf_i386")
-add_custom_target(stage1 DEPENDS stage1.bin)
-target_include_directories(stage1.bin  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/kernel/)
-
-add_executable(stage2.dbg ${BOOT_SRCS})
-
-#TODO this is a hack
-target_include_directories(stage2.dbg PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/kernel/)
-
-target_link_libraries(stage2.dbg kernel)
-
-set_target_properties(stage2.dbg
-                      PROPERTIES
-                      LINKER_LANGUAGE "ASM_NASM"
-                      LINK_FLAGS "-T${STAGE2_LDSCRIPT} -melf_i386 -Map stage2.map")
-
-add_custom_command(
-    OUTPUT stage2.bin
-    DEPENDS stage2.dbg
-    #TODO better search/names for strip command
-    COMMAND ${CMAKE_COMMAND} -E copy stage2.dbg stage2.bin
-    COMMAND i686-elf-strip -g stage2.bin
-)
-add_custom_target(stage2 ALL DEPENDS stage2.bin)

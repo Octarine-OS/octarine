@@ -25,5 +25,5 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
-include(${CMAKE_CURRENT_LIST_DIR}/boot/CMakeLists.txt)
-
+add_subdirectory(boot)
+add_subdirectory(kernel)

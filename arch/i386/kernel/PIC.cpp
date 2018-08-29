@@ -26,7 +26,7 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#include <pic.hpp>
+#include <PIC.hpp>
 #include <portio.h>
 
 

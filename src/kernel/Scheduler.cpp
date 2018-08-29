@@ -27,7 +27,7 @@
  */
 
 #include "Thread.hpp"
-#include "pic.hpp"
+#include "PIC.hpp"
 #include <klib.h>
 #include "portio.h"
 #include "util.hpp"
