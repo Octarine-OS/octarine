@@ -27,4 +27,4 @@ add_subdirectory(arch)
 add_subdirectory(contrib)
 
 add_subdirectory(klib)
-add_subdirectory(src/kernel)
+add_subdirectory(kernel)

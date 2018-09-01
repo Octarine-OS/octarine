@@ -32,7 +32,7 @@ set_target_properties(stage1.bin
                       LINK_FLAGS "-T${CMAKE_CURRENT_SOURCE_DIR}/stage1.ld -melf_i386")
 add_custom_target(stage1 DEPENDS stage1.bin)
 
-target_include_directories(stage1.bin  PRIVATE ${octarine_SOURCE_DIR}/src/kernel/)
+target_include_directories(stage1.bin  PRIVATE ${octarine_SOURCE_DIR}/kernel/)
 
 
 
@@ -47,7 +47,7 @@ endif()
 
 
 #TODO this is a hack
-target_include_directories(stage2.dbg PRIVATE ${octarine_SOURCE_DIR}/src/kernel/)
+target_include_directories(stage2.dbg PRIVATE ${octarine_SOURCE_DIR}/kernel/)
 
 target_link_libraries(stage2.dbg kernel)
 

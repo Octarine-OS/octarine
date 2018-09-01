@@ -35,4 +35,4 @@ target_include_directories(arch_kernel
 )
 
 #TODO: this is a hack
-target_include_directories(arch_kernel PRIVATE ${octarine_SOURCE_DIR}/src/kernel)
+target_include_directories(arch_kernel PRIVATE ${octarine_SOURCE_DIR}/kernel)
