@@ -26,6 +26,8 @@
 ################################################################################
 
 add_library(arch_kernel OBJECT
+    bioscall.asm
+    cpumode.asm
     PIC.cpp
 )
 

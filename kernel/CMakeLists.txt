@@ -32,10 +32,8 @@
 set(COMMON_SRC  bioscall.asm  tlsf.c util.cpp scheduler.cpp cpumode.asm terminal.cpp  mm.cpp atkeyboard.cpp InterruptManager.cpp InterruptHandler_asm.asm pic.cpp mario.asm)
 
 add_library(kernel STATIC EXCLUDE_FROM_ALL
-	bioscall.asm
 	util.cpp
 	scheduler.cpp
-	cpumode.asm
 	terminal.cpp
 	mm.cpp
 	atkeyboard.cpp
