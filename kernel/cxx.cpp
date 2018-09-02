@@ -35,9 +35,13 @@ extern "C" {
 }
 
 int __cxa_atexit(void (*destructor) (void *), void *arg, void *dso){
+    (void) destructor;
+    (void) arg;
+    (void) dso;
     return 0;
 }
 void __cxa_finalize(void *f){
+    (void)f;
 
 }
 

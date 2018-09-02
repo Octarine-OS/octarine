@@ -29,7 +29,7 @@ use32
 
 %include "/registers.mac"
 
-extern _ZN16InterruptManager9interruptER14InterruptState
+extern _ZN4i3863IDT9InterruptERNS_7ContextE
 global isr_table
 global intMgrInstance
 global isr32
@@ -66,8 +66,7 @@ interrupt_handler_core:
   mov eax, esp
   ;add eax, 4 ;note super hack
   push eax
-  push dword [intMgrInstance]
-  call _ZN16InterruptManager9interruptER14InterruptState
+  call _ZN4i3863IDT9InterruptERNS_7ContextE
   
   ;clean up stack
   add esp, 8 
@@ -116,6 +115,3 @@ isr_table:
 dd isr %+ i
 %assign i i+1
 %endrep
-
-intMgrInstance:
-dd 0

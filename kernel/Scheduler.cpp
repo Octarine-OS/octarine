@@ -61,7 +61,7 @@ static void e9_str(const char* str){
 }
 
 
-void EIPHack(InterruptState * state){
+void EIPHack(arch::Context * state){
     
     //SUper hack to save the cs:EIP values when we task switch
     *((uint32_t*)((uint8_t*)state->esp + 8)) = state->eip;
@@ -72,7 +72,7 @@ void EIPHack(InterruptState * state){
 }
 bool firstSwitch= false;
 //This gets installed as our interrupt handler
-void TaskSwitchIRQ(InterruptState *state){
+void TaskSwitchIRQ(arch::Context *state){
 
     uint32_t old_eip = state->eip;
     

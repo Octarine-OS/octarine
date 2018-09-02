@@ -26,9 +26,13 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#ifndef IDT_H
-#define IDT_H
+#ifndef IDT_HPP
+#define IDT_HPP
 
+#include "machine/Context.hpp"
+#include <stdint.h>
+
+namespace i386 {
 typedef struct {
     unsigned int present:1;
     unsigned int DPL:2;
@@ -50,5 +54,21 @@ typedef struct {
     uint16_t offset_high;
 
 } IDT_entry;
+
+
+class IDT {
+public:
+    IDT();
+    static void Dummy(); //Hack to make sure we get linked
+private:
+
+    void SetIDTVector(uint8_t vec, uint16_t cs, void *isr, uint8_t dpl, uint8_t type);
+    static void Interrupt(arch::Context &ctx);
+private:
+    IDT_entry idt[256];
+};
+
+
+}
 
 #endif

@@ -37,8 +37,8 @@ add_library(kernel STATIC EXCLUDE_FROM_ALL
 	terminal.cpp
 	mm.cpp
 	atkeyboard.cpp
-	InterruptManager.cpp
-	InterruptHandler_asm.asm
+	IRQManager.cpp
+	#InterruptManager.cpp
 	Keyboard.cpp
 	PS2Keyboard.cpp
 	cxx.cpp
@@ -51,4 +51,4 @@ else()
 endif()
 
 target_include_directories(kernel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(kernel arch_kernel klib tlsf)
+target_link_libraries(kernel arch_kernel klib tlsf arch_includes)

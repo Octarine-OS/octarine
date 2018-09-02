@@ -28,6 +28,8 @@
 add_library(arch_kernel OBJECT
     bioscall.asm
     cpumode.asm
+    IDT.cpp
+    InterruptHandler_asm.asm
     PIC.cpp
 )
 
@@ -37,4 +39,8 @@ target_include_directories(arch_kernel
 )
 
 #TODO: this is a hack
-target_include_directories(arch_kernel PRIVATE ${octarine_SOURCE_DIR}/kernel)
+target_include_directories(arch_kernel
+    PRIVATE
+    ${octarine_SOURCE_DIR}/kernel
+    ${octarine_SOURCE_DIR}/arch/i386/include
+)

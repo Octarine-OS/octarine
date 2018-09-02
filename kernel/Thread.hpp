@@ -29,20 +29,18 @@
 #ifndef THREAD_HPP
 #define THREAD_HPP
 
-#include "InterruptManager.hpp"
+#include "machine/Context.hpp"
 #include "List.hpp"
-
-typedef InterruptState ThreadState;
 
 struct Thread {
 
     int id;
-    ThreadState state; // TODO rename to context?
+    arch::Context state; // TODO rename to context?
     ListHook<Thread> _listHook;
 };
 
 typedef List<Thread, &Thread::_listHook> ThreadList;
-void TaskSwitchIRQ(InterruptState *state);
+void TaskSwitchIRQ(arch::Context *state);
 namespace Scheduler {
 
     void Init();

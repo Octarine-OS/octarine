@@ -25,4 +25,6 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
+add_library(arch_includes INTERFACE)
+
 add_subdirectory(${OCTARINE_TARGET_ARCH})

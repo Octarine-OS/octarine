@@ -33,14 +33,14 @@
 #include "mm.h"
 #include "terminal.h"
 #include "multiboot.h"
-
-#include "InterruptManager.hpp"
+#include "IRQManager.hpp"
 #include "pic.hpp"
 #include "portio.h"
 
 #include "Thread.hpp"
 
-
+//TODO this is a hack
+#include "../kernel/IDT.hpp"
 
 extern char start_load, end_load, ebss;
 extern "C" void _multibootEntry();
@@ -91,10 +91,9 @@ void Thread2Test(){
 	}
 }
 //SUPER HACK
-void SetIntrManager(InterruptManager *);
 void InitPS2();
 
-void GarbageHandler(InterruptState *){
+void GarbageHandler(){
 
 }
 
@@ -102,6 +101,7 @@ Terminal *globalTerm = 0;
 extern "C" void kmain(uint32_t magic, multiboot_info *bootInfo) {
 	Terminal term;
 	globalTerm = &term;
+	i386::IDT::Dummy(); //TODO a hack for linking crap
 	if(magic != MULTIBOOT_BOOTLOADER_MAGIC){
 		term.printString("Bootloader failure!\n");
 		return;
@@ -122,18 +122,16 @@ extern "C" void kmain(uint32_t magic, multiboot_info *bootInfo) {
 	term.printString("MULTIBOOT Proof of Concept!\n");
 	//kill time 
 	term.printString("initalizing interrupt manager.\n");
-	InterruptManager intMgr;
-	
-	intMgr.Initialize();
+
+	IRQManager::Initialize();
 	term.printString("Initializing PIC\n");
 	PIC::init();
 
-	//SUPER HACK
-	SetIntrManager(&intMgr);
+
 	InitPS2();
 
 	MaskIntr();
-	intMgr.registerHandler(GarbageHandler, 0x20);
+	IRQManager::SetHandler(0, GarbageHandler); //IRQ_0 eg 0x20
 	asm("sti");
 	if(false){ // stuff for task switching test code
 		asm("cli");
@@ -142,7 +140,7 @@ extern "C" void kmain(uint32_t magic, multiboot_info *bootInfo) {
 		Scheduler::InitThread(&Thread1Test)->id = 1;
 		Scheduler::InitThread(&Thread2Test)->id = 2;
 
-		intMgr.registerHandler(TaskSwitchIRQ, 0x20);
+		//IRQManager::SetHandler(0, TaskSwitchIRQ); //IRQ_0
 
 
 		//Enable the timer .... i think
@@ -159,57 +157,7 @@ extern "C" void kmain(uint32_t magic, multiboot_info *bootInfo) {
 		}
 	}
 	while(true);
-	#if 0
-	//TODO should abstract to IRQ_0 or something
-	intMgr.registerHandler(timerInterrupt, 0x20);
-	
-	
-	term.printString("Done!\n");
-	/*outb(0xe9, 't');
-	outb(0xe9, 'e');
-	outb(0xe9, 's');
-	outb(0xe9, 't');*/
-	//renable interrupts
-	//asm("sti");
-	//term.newLine();
-	//asm volatile ("int $1" );
-	///int i = 1/0;
-	//Try beeping
-	port61_silence = inb(0x61) & 0xFC;
-	port61_on = port61_silence | 3;
-	outb(0x61, port61_silence);
-	uint8_t temp = inb(0x61);
-	outb(0x61, temp | 3);
-	
-    
-	//outb(0x43, pit_cmd);
-	outb(0x43, 0xB6); //Setup Channel 2
-	
-	//Setup channel 1
-	
-	
-	//BeepTest();
-	/*
-	outb(0x42,0x0f);
-	outb(0x42, 0x07);*/
-	sampleCount = MarioData[0];
-	char buff[5];
-	shittyHexStr(sampleCount, buff);
-	buff[4]=0;
-	term.printString("Sample ct=");
-	term.printString(buff);
-	term.newLine();
-	//Trigger loading first frame of data
-	outb(0x43, 0x34);
-	setTimer(1193);
-	//timerInterrupt(nullptr);
-	
-	
-	asm("sti");
-	while(1){
-		
-	}
-	#endif
+
 }
 
 __attribute__((section(".header")))

@@ -26,65 +26,27 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#ifndef INTERUPTMANAGER_HPP
-#define INTERUPTMANAGER_HPP
+#ifndef IRQ_MANAGER_HPP
+#define IRQ_MANAGER_HPP
 
-#include "registers.h"
-#include "idt.h"
-//note this matches layout of "PUSHAD" func
-//TODO: save segment register state when that is an issue
-typedef struct InterruptState {
-  
-  //uint32_t errCode;
-  //uint32_t intNum;
-  
-  uint32_t edi;
-  uint32_t esi;
-  uint32_t ebp;
-  uint32_t esp;
-  uint32_t ebx;
-  uint32_t edx;
-  uint32_t ecx;
-  uint32_t eax;
-  
-  uint32_t intNum;
-  uint32_t errCode;
-  
-  uint32_t eip;
-  uint32_t cs;
-  uint32_t eflags;
-} InterruptState;
+#include <machine/Context.hpp>
 
+typedef  void (*IRQHandler)();
 
-//typedef  void (*InterruptHandler)(int intNum, Registers &state);
-typedef  void (*InterruptHandler)(InterruptState *state);
-//Singleton
-//TODO: at the moment this is x86 specific, later should be separated out
-class InterruptManager {
-  public:
+/*
+class IRQManager {
+public:
 
-  InterruptHandler osHandlers[256];
- // virtual bool registerInterruptHandler(int intNum, InterruptHandler handler) = 0;
+  void SetHandler(unsigned int irq, IRQHandler *handeler);
   
-  //protected:
-  InterruptManager(){}
+};*/
+namespace IRQManager {
   
-  //TODO: more elegant solution
+  void Initialize();
+  int SetHandler(unsigned int irq, IRQHandler handler);
 
-  //virtual ~InterruptManager();
-   void Initialize();
-   void registerHandler(InterruptHandler handler, uint8_t vector){
-     //TODO we should check if we are overwriting an existing handler
-     osHandlers[vector] = handler;
-   }
-     
-  private:
-    IDT_entry idt[256];
-    int dummyField;
-    
-    void setIDTVector(uint8_t vec, uint16_t cs, void *isr, uint8_t dpl, uint8_t type);
-    void interrupt(InterruptState&);
+  void DoIRQ(unsigned int irq);
   
-};
+}
 
 #endif

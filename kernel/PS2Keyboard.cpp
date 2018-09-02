@@ -28,7 +28,7 @@
 
 #include "portio.h"
 #include "io/Keyboard.hpp"
-#include "InterruptManager.hpp"
+#include "IRQManager.hpp"
 #include <pic.hpp>
 #include "util.hpp"
 
@@ -48,7 +48,7 @@ static void e9_dump(uint32_t val){
 }
 
 namespace {
-    InterruptManager *interrupt_hack;
+
 class PS2Keyboard: public io::Keyboard {
 public:
     PS2Keyboard(){
@@ -126,8 +126,7 @@ static uint8_t ReadData(){
     return inb(DATA_PORT);
 }
 //TODO This is a gross hack until we get functors online properly
-static void KeyboardIntr(InterruptState *state){
-    (void)state;
+static void KeyboardIntr(){
     //TODO assert theKeyboard != nullptr
     e9_str("\nKIRQ\n");
     theKeyboard.IRQ();
@@ -238,7 +237,7 @@ e9_str("sendigRest cmd\n");
     WriteData(config);
     
     //TODO super hack
-    interrupt_hack->registerHandler(&KeyboardIntr, 0x21);
+    IRQManager::SetHandler(1, &KeyboardIntr); //IRQ_1
     FlushData();
 
 }
@@ -267,12 +266,6 @@ io::Keyboard* GetPS2Keyboard(){
     return theKeyboard;*/
     return nullptr;
 }
-
-//TODO SUPER HACK
-void SetIntrManager(InterruptManager *mgr){
-    interrupt_hack = mgr;
-}
-
 
 void InitPS2(){
     e9_str("Calling kbd init\n");
