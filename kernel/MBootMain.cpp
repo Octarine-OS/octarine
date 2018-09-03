@@ -108,17 +108,6 @@ extern "C" void kmain(uint32_t magic, multiboot_info *bootInfo) {
 	}
 	initTrampoline();
 	initMM();
-    //
-    /*
-    ATKeyboard.init();
-    term.showCursor();
-    term.printString("OCTARINE V1.0\n");
-    term.printString("Boot drive: ");
-    char buff[32];
-    ucvt(bootInfo->boot_device, buff, 10, 3, 0);
-    term.printString(buff);
-    term.newLine();
-    runShell(term);*/
 	term.printString("MULTIBOOT Proof of Concept!\n");
 	//kill time 
 	term.printString("initalizing interrupt manager.\n");
@@ -146,7 +135,7 @@ extern "C" void kmain(uint32_t magic, multiboot_info *bootInfo) {
 		//Enable the timer .... i think
 		outb(0x43, 0x34);
 
-				//set frequency to approx 20Hz
+		//set frequency to approx 20Hz
 		setTimer(59659);
 		asm("sti");
 
