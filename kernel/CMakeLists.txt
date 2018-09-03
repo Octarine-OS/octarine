@@ -36,7 +36,6 @@ add_library(kernel STATIC EXCLUDE_FROM_ALL
 	scheduler.cpp
 	terminal.cpp
 	mm.cpp
-	atkeyboard.cpp
 	IRQManager.cpp
 	#InterruptManager.cpp
 	Keyboard.cpp
