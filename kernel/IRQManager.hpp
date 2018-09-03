@@ -33,13 +33,6 @@
 
 typedef  void (*IRQHandler)();
 
-/*
-class IRQManager {
-public:
-
-  void SetHandler(unsigned int irq, IRQHandler *handeler);
-  
-};*/
 namespace IRQManager {
   
   void Initialize();
