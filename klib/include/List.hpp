@@ -30,16 +30,13 @@
 #define LIST_HPP
 
 //#include <assert.h>
-#ifndef NULL
-#define NULL ((void*)(0))
-#endif 
 
 
 template<typename T>
 struct ListHook {
 	T *prev;
 	T *next;
-	ListHook() { prev = (T*) NULL; next = (T*) NULL;}
+	ListHook() { prev = nullptr; next = nullptr;}
 };
 
 template<typename T, ListHook<T> T::* list_data>
@@ -88,7 +85,7 @@ class List {
 		
 		//TODO maybe check head==NULL || tail == NULL
 		// but that would make us slower
-		if(m_head == NULL ){
+		if(m_head == nullptr ){
 			
 			(elem->*list_data).next = elem;
 			(elem->*list_data).prev = elem;
@@ -105,14 +102,14 @@ class List {
 	public:
 	typedef ListIterator<T, list_data> Iterator;
 	List(){
-		m_head = (T*)NULL;
-		m_tail = (T*)NULL;
+		m_head = nullptr;
+		m_tail = nullptr;
 	}
 	
 	void insert_head(T* elem){
 		insert(elem);
 		m_head = elem;
-		if(m_tail == NULL) {
+		if(m_tail == nullptr) {
 			m_tail = elem;
 		}
 	}
@@ -120,7 +117,7 @@ class List {
 	void insert_tail(T* elem){
 		insert(elem);
 		m_tail = elem;
-		if(m_head == NULL){
+		if(m_head == nullptr){
 			m_head = elem;
 		}
 	}
@@ -138,7 +135,7 @@ class List {
 			//assert(prev == elem);
 			//assert(elem == m_head);
 			//assert(elem == m_tail);
-			m_head = m_tail = NULL;
+			m_head = m_tail = nullptr;
 			//TODO do we want to set new values of next and prev?
 			return;
 		}
