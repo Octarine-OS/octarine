@@ -29,6 +29,7 @@ add_library(klib
     cxxabi.cpp
     memcpy.c
     memset.c
+    strlen.c
 ) 
 target_include_directories(klib 
     PUBLIC include)
