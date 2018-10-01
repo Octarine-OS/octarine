@@ -29,7 +29,7 @@
 #define KLIB_NO_INLINE
 #include <klib.h>
 
-void memcpy(void *dest, void *src, size_t sz){
+void* memcpy(void *dest, void *src, size_t sz){
     uint8_t* s = (uint8_t*)src;
     uint8_t* d = (uint8_t*)dest;
 
@@ -37,5 +37,5 @@ void memcpy(void *dest, void *src, size_t sz){
         d[i] = s[i];
     }
 
-    //TODO fix this
+    return dest;
 }

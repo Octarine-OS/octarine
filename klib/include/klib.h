@@ -33,7 +33,7 @@
 #include <stddef.h>
 #include <sys/cdefs.h>
 BEGIN_DEF
-void memcpy(void * dst, void *src, size_t sz);
+void* memcpy(void * dst, void *src, size_t sz);
 
 void* memset(void *dst, int value, size_t num);
 
