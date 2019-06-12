@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (c) 2018, Devin Nakamura
+# Copyright (c) 2019, Devin Nakamura
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,6 @@ add_library(kernel STATIC EXCLUDE_FROM_ALL
 	#InterruptManager.cpp
 	Keyboard.cpp
 	PS2Keyboard.cpp
-	cxx.cpp
 )
 if(OCTARINE_MULTIBOOT)
 	target_sources(kernel PRIVATE MBootMain.cpp)
