@@ -3,7 +3,7 @@ ENTRY(_multibootEntry)
 
 SECTIONS
 {
-    . =0x0100000;
+    . = 0x0100000;
 
 	.header :
 	{
