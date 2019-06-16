@@ -147,16 +147,16 @@ extern "C" void kmain(uint32_t magic, multiboot_info *bootInfo) {
 	while(true);
 
 }
-
+#define fold(x) (__builtin_constant_p(x) ? (x) : (x))
 __attribute__((section(".header")))
 constexpr multiboot_header _mbootHeader  = {
 	.magic = MULTIBOOT_HEADER_MAGIC,
 	.flags = MULTIBOOT_AOUT_KLUDGE,
 	.checksum =(uint32_t) (0-(MULTIBOOT_HEADER_MAGIC+MULTIBOOT_AOUT_KLUDGE)),
-	.header_addr = (uint32_t) &_mbootHeader,
-	.load_addr = (uint32_t) &_mbootHeader,
+	.header_addr = fold((uintptr_t) &_mbootHeader),
+	.load_addr = fold((uint32_t) &_mbootHeader),
 	//.load_addr = (uint32_t) &start_load,
-	.load_end_addr = (uint32_t) &end_load,
-	.bss_end_addr = (uint32_t) &ebss,
-	.entry_addr = (uint32_t)&_multibootEntry
+	.load_end_addr = fold((uint32_t) &end_load),
+	.bss_end_addr = fold((uint32_t) &ebss),
+	.entry_addr = fold((uint32_t)&_multibootEntry)
 };
