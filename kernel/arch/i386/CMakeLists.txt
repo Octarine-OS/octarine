@@ -42,5 +42,6 @@ target_include_directories(arch_kernel
 target_include_directories(arch_kernel
     PRIVATE
     ${octarine_SOURCE_DIR}/kernel
+    ${octarine_SOURCE_DIR}/kernel/include
     ${octarine_SOURCE_DIR}/arch/i386/include
 )

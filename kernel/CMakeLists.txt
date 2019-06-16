@@ -49,5 +49,10 @@ else()
 	target_sources(kernel PRIVATE main.cpp)
 endif()
 
-target_include_directories(kernel PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(kernel
+	PUBLIC
+		include
+	PRIVATE
+		${CMAKE_CURRENT_SOURCE_DIR}
+)
 target_link_libraries(kernel arch_kernel klib tlsf arch_includes)
