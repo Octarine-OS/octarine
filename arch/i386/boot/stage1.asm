@@ -26,7 +26,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;this is the first stage of the boot loader
-
+global start
+global _start
 ;Define Contants
 INITIAL_STACK_POINTER equ 0x2000
 MAGIC_SIGNATURE equ 0xBEEF ;the magic signature
@@ -59,6 +60,7 @@ a20msg db 'A20 failure', 0
 code:
     jmp 0:start ;ensure that CS  is set to 0
 
+_start:
 start:
     cli ;we dont want interrupts until we have the stack working
 
