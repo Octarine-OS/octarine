@@ -46,3 +46,4 @@ void __cxa_finalize(void *f){
 }
 
 void  operator delete (void *, unsigned long) throw() { };
+void  operator delete (void *) throw() { };
