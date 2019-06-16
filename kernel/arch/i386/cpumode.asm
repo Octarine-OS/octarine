@@ -40,7 +40,7 @@ protToReal:
     pop DWORD [REAL_MODE_STACK_BASE - 4]
     push ebp
 
-
+    sidt [prot_idt]
     o16 lidt [real_idt]
     
     ;save our position on the stack
