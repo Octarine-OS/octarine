@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (c) 2018, Devin Nakamura
+# Copyright (c) 2019, Devin Nakamura
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -25,9 +25,5 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
-target_include_directories(arch_includes
-    INTERFACE
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
-add_subdirectory(boot)
+#TODO check if i386
+add_subdirectory(i386)

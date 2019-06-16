@@ -39,7 +39,7 @@
 #include "Thread.hpp"
 
 //TODO this is a hack
-#include "../kernel/IDT.hpp"
+#include "arch/i386/IDT.hpp"
 
 extern char start_load, end_load, ebss;
 extern "C" void _multibootEntry();
@@ -147,6 +147,7 @@ extern "C" void kmain(uint32_t magic, multiboot_info *bootInfo) {
 	while(true);
 
 }
+
 #define fold(x) (__builtin_constant_p(x) ? (x) : (x))
 __attribute__((section(".header")))
 constexpr multiboot_header _mbootHeader  = {
