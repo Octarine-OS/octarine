@@ -41,6 +41,9 @@
 //TODO this is a hack
 #include "arch/i386/IDT.hpp"
 
+//TODO this should be moved into a header
+const uintptr_t KERNEL_VIRTUAL_BASE = 0xC0000000;
+
 extern char start_load, end_load, ebss;
 extern "C" void _multibootEntry();
 
@@ -155,7 +158,7 @@ constexpr multiboot_header _mbootHeader  = {
 	.flags = MULTIBOOT_AOUT_KLUDGE,
 	.checksum =(uint32_t) (0-(MULTIBOOT_HEADER_MAGIC+MULTIBOOT_AOUT_KLUDGE)),
 	.header_addr = fold((uintptr_t) &_mbootHeader),
-	.load_addr = fold((uint32_t) &_mbootHeader),
+	.load_addr = fold((uint32_t) &_mbootHeader - KERNEL_VIRTUAL_BASE),
 	//.load_addr = (uint32_t) &start_load,
 	.load_end_addr = fold((uint32_t) &end_load),
 	.bss_end_addr = fold((uint32_t) &ebss),

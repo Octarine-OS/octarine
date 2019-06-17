@@ -3,9 +3,9 @@ ENTRY(_multibootEntry)
 
 SECTIONS
 {
-    . = 0x0100000;
+    . =  0xC0000000 + 0x00100000;
 
-	.header :
+	.header :  AT(0x00100000)
 	{
 		*(.header)
 		_end_header = .;
@@ -14,7 +14,7 @@ SECTIONS
 	}
 	_begin_trampoline = .;
 	.lowmem 0x8000:
-	AT(_begin_trampoline)
+	AT(_begin_trampoline - 0xC0000000)
 	{
 		_low_mapping = .;
 		*(.lowtext)
@@ -25,7 +25,7 @@ SECTIONS
 	_end_trampoline = .;
 
     .text :
-	AT(ADDR(.text))
+	AT(_end_trampoline - 0xC0000000)
 	{
         *(.text);
         *(.gnu.linkonce.t*);

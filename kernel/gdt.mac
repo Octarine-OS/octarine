@@ -31,7 +31,7 @@ align 8
 GDT:
 ; First GDT entry is null and never refrenced, so we use it as a place to store the gdt descriptor
 dw GDT_end - GDT - 1 ;length of GDT
-dd GDT ;pointer to start of GDT
+dd GDT - KERNEL_VIRTUAL_BASE ;pointer to start of GDT
 dw 0 ;pad out to length of GDT entry
 
 

@@ -29,6 +29,7 @@ REAL_MODE_DATA_SEG equ 4 << 3
 REAL_MODE_CODE_SEG equ 3 << 3
 
 REAL_MODE_STACK_BASE equ 0x2000
+KERNEL_VIRTUAL_BASE equ 0xC0000000
 
 
 SEGMENT .lowtext
@@ -43,6 +44,9 @@ protToReal:
     sidt [prot_idt]
     o16 lidt [real_idt]
     
+    mov eax, cr3
+    mov [saved_page_dir], eax
+
     ;save our position on the stack
     mov eax, esp
     mov [savedSP], eax
@@ -67,8 +71,10 @@ protToReal:
 
 .temp_real_code:
     [bits 16]
-    ;clear p-mode flag
+    ;clear p-mode and paging flags
     mov eax, cr0
+    and eax, 0x7FFFFFFF ; disable paging bit
+    mov cr0, eax
     and al, 0xFE ;PE flag is bit 0
     mov cr0, eax
     jmp  0:.real_mode
@@ -91,7 +97,12 @@ realToProt:
     ; Note lgdt [X] is implictly lgdt [DS:x]
     xor ax, ax
     mov ds, ax
-    lgdt [GDT]
+    lgdt [GDT - KERNEL_VIRTUAL_BASE]
+
+    ;Load the page directory
+    mov eax, [saved_page_dir]
+    mov cr3, eax
+
     mov eax, cr0
     or al, 1 ;set p-mode bit
     mov cr0, eax
@@ -101,6 +112,12 @@ realToProt:
     jmp  08h:.pmode_start
 .pmode_start:
     [Bits 32]
+
+    ;enable paging
+    mov eax, cr0
+    or eax, 0x80000000 ; set paging bit
+    mov cr0, eax
+
     ;lets update all the data segment descriptors
     mov AX, 0x10 ;ie the 3rd gdt entry
     mov DS, AX
@@ -126,6 +143,7 @@ realToProt:
 o16    ret
 
 section .lowdata
+saved_page_dir: dd 0
 real_idt:
     dw 0x3FF
     dd 0
