@@ -27,6 +27,6 @@
 
 # Various configuration options
 
-option(OCTARINE_MULTIBOOT "Build multiboot kerenel" FALSE)
+option(OCTARINE_MULTIBOOT "Build multiboot kerenel" ON)
 
 set(OCTARINE_TARGET_ARCH i386 CACHE STRING "Target architecture")
