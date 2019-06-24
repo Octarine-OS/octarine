@@ -30,7 +30,7 @@ add_subdirectory(arch)
 
 #hacks for multiboot
 # TODO re-add shell
-set(COMMON_SRC  bioscall.asm  tlsf.c util.cpp scheduler.cpp cpumode.asm terminal.cpp  mm.cpp atkeyboard.cpp InterruptManager.cpp InterruptHandler_asm.asm pic.cpp mario.asm)
+set(COMMON_SRC  bioscall.asm  tlsf.c util.cpp Scheduler.cpp cpumode.asm terminal.cpp  mm.cpp atkeyboard.cpp InterruptManager.cpp InterruptHandler_asm.asm pic.cpp mario.asm)
 
 add_library(kernel STATIC EXCLUDE_FROM_ALL
 	util.cpp
