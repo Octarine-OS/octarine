@@ -25,12 +25,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
-add_executable(stage1.bin stage1.asm)
-set_target_properties(stage1.bin
-                      PROPERTIES
-                      LINKER_LANGUAGE "ASM_NASM"
-                      LINK_FLAGS "-T${CMAKE_CURRENT_SOURCE_DIR}/stage1.ld -melf_i386")
-add_custom_target(stage1 DEPENDS stage1.bin)
+
 
 target_include_directories(stage1.bin  PRIVATE ${octarine_SOURCE_DIR}/kernel/)
 
@@ -40,6 +35,12 @@ if(OCTARINE_MULTIBOOT)
 	add_executable(stage2.dbg multiboot.asm)
 	set(STAGE2_LDSCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/multiboot.ld)
 else()
+    add_executable(stage1.bin stage1.asm)
+    set_target_properties(stage1.bin
+                        PROPERTIES
+                        LINKER_LANGUAGE "ASM_NASM"
+                        LINK_FLAGS "-T${CMAKE_CURRENT_SOURCE_DIR}/stage1.ld -melf_i386")
+    add_custom_target(stage1 DEPENDS stage1.bin)
 	add_executable(stage2.dbg stage2.asm)
 	set(STAGE2_LDSCRIPT linker.ld)
 endif()
