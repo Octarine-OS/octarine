@@ -32,7 +32,7 @@
 #include "kernel/terminal.h"
 #include "shell.h"
 #include "InterruptManager.hpp"
-#include "pic.hpp"
+#include "PIC.hpp"
 
 Terminal *globalTerm = 0;
 extern "C" void kmain(uint8_t bootdrive) {

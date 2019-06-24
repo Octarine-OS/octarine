@@ -33,7 +33,7 @@
 #include "terminal.h"
 #include "multiboot.h"
 #include "IRQManager.hpp"
-#include "pic.hpp"
+#include "PIC.hpp"
 #include "portio.h"
 
 #include "Thread.hpp"

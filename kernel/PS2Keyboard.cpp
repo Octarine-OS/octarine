@@ -29,7 +29,7 @@
 #include "portio.h"
 #include "io/Keyboard.hpp"
 #include "IRQManager.hpp"
-#include <pic.hpp>
+#include <PIC.hpp>
 #include "util.hpp"
 
 static void e9_str(const char* str){
