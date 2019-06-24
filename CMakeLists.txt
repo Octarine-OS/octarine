@@ -6,6 +6,7 @@ project(octarine)
 enable_language(ASM_NASM)
 
 include(cmake/config.cmake)
+include(cmake/toolcfg.cmake)
 
 
 set(CMAKE_ASM_NASM_LINKER_PREFERENCE_PROPAGATES 0)
