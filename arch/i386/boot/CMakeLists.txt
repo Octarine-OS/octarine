@@ -27,7 +27,7 @@
 
 
 
-target_include_directories(stage1.bin  PRIVATE ${octarine_SOURCE_DIR}/kernel/)
+
 
 
 
@@ -42,7 +42,8 @@ else()
                         LINK_FLAGS "-T${CMAKE_CURRENT_SOURCE_DIR}/stage1.ld -melf_i386")
     add_custom_target(stage1 DEPENDS stage1.bin)
 	add_executable(stage2.dbg stage2.asm)
-	set(STAGE2_LDSCRIPT linker.ld)
+    set(STAGE2_LDSCRIPT linker.ld)
+    target_include_directories(stage1.bin  PRIVATE ${octarine_SOURCE_DIR}/kernel/)
 endif()
 
 
