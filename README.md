@@ -20,9 +20,12 @@ From the source directory:
 
     mkdir build
     cd build
-    cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_LINKER=ld.lld ..
+    cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain-clang.cmake ..
     make
-    qemu -kernel arch/i386/boot/stage2.bin
+    qemu-system-i386 -kernel arch/i386/boot/stage2.bin
+
+Note:
+If qemu gives you an error along the lines of `Error loading uncompressed kernel without PVH ELF Note`, try adding `-machine type=pc-i440fx-3.1` to the command line
 
 ## Source Organization
 
