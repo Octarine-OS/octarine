@@ -151,7 +151,8 @@ extern "C" void kmain(uint32_t magic, multiboot_info *bootInfo) {
 
 }
 
-__attribute__((section(".header")))
+__attribute__((section(".header"))) extern
+const multiboot_header _mbootHeader;
 const multiboot_header _mbootHeader  = {
 	.magic = MULTIBOOT_HEADER_MAGIC,
 	.flags = MULTIBOOT_AOUT_KLUDGE,
