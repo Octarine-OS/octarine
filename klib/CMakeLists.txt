@@ -27,6 +27,8 @@
 
 add_library(klib
     cxxabi.cpp
+    string/memchr.c
+    string/memcmp.c
     string/memcpy.c
     string/memset.c
     string/strlen.c
