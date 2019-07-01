@@ -56,7 +56,8 @@ target_link_libraries(stage2.dbg kernel)
 set_target_properties(stage2.dbg
                       PROPERTIES
                       LINKER_LANGUAGE "ASM_NASM"
-                      LINK_FLAGS "-T${STAGE2_LDSCRIPT} -melf_i386 -Map stage2.map")
+                      LINK_FLAGS "-T${STAGE2_LDSCRIPT} -melf_i386 -Map stage2.map"
+                      LINK_DEPENDS "${STAGE2_LDSCRIPT}")
 
 add_custom_command(
     OUTPUT stage2.bin
