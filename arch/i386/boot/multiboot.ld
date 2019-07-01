@@ -59,7 +59,7 @@ SECTIONS
 	} :lowmem
     _end_trampoline = ABSOLUTE(_begin_trampoline + SIZEOF(.lowmem));
 
-    end_load = LOADADDR(.lowmem);
+    end_load = LOADADDR(.lowmem) + SIZEOF(.lowmem);
 
     .bss  ADDR(.data) + SIZEOF(.data): AT(LOADADDR(.lowmem) + SIZEOF(.lowmem))
     {
