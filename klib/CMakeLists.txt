@@ -31,6 +31,8 @@ add_library(klib
     string/memcmp.c
     string/memcpy.c
     string/memset.c
+    string/strcat.c
+    string/strcpy.c
     string/strlen.c
 ) 
 target_include_directories(klib 
