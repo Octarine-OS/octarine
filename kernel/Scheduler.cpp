@@ -32,6 +32,8 @@
 #include "portio.h"
 #include "util.hpp"
 #include <stdint.h>
+#include "e9dump.hpp"
+
 namespace{
     class ThreadSceduler{
 
@@ -42,24 +44,6 @@ namespace{
 }
 
 typedef uint32_t size_t;
-
-static void e9_dump(uint32_t val, bool nl = true){
-    char buff[9];
-    shittyHexStr32(val, buff);
-    for(int i=0; i < 8; ++ i){
-        outb(0xe9, buff[i]);
-    }
-    if(nl)
-     outb(0xe9, '\n');
-}
-
-static void e9_str(const char* str){
-    while(*str != '\0'){
-        outb(0xe9, *str);
-        ++str;
-    }
-}
-
 
 void EIPHack(arch::Context * state){
     
@@ -78,7 +62,9 @@ void TaskSwitchIRQ(arch::Context *state){
     
     e9_str("\n IRQ\nESP=");
     e9_dump(state->esp);
+    outb(0xe9, '\n');
     e9_dump(currentThread->id);
+    outb(0xe9, '\n');
 
 
     // Save state of current thread
@@ -91,6 +77,7 @@ void TaskSwitchIRQ(arch::Context *state){
     // THis is boring because it is just round robin scheduling
     ++currentThread;
     e9_dump(currentThread->id);
+    outb(0xe9, '\n');
 
     
     // Write the new threads state into the interrupt state
@@ -99,9 +86,10 @@ void TaskSwitchIRQ(arch::Context *state){
 
     EIPHack(state);
     
-    e9_dump(old_eip , false);
+    e9_dump(old_eip);
     e9_str("->");
     e9_dump(state->eip);
+    outb(0xe9, '\n');
     PIC::sendEOI(0x0);
     return;
 }
@@ -110,6 +98,7 @@ Thread * Scheduler::InitThread(void (*entry)()){
     Thread* thread = (Thread*)malloc(sizeof(Thread));
     e9_str("Init Thread ");
     e9_dump((uint32_t) entry);
+    outb(0xe9, '\n');
     memset(thread, 0, sizeof(Thread));
     thread->id = 0xDEADBEEf;
     thread->state.eip = (uint32_t) entry;
@@ -128,6 +117,7 @@ Thread * Scheduler::InitThread(void (*entry)()){
     thread->state.esp = (uint32_t)malloc(STACK_SIZE) + STACK_SIZE - 8;
     e9_str("New stack =");
     e9_dump(thread->state.esp);
+    outb(0xe9, '\n');
     thread->state.eflags = 0x200;
     all_threads.insert_tail(thread);
     //TODO this is just nasty

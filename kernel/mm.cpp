@@ -32,24 +32,10 @@
 #include "mm.h"
 #include "portio.h"
 #include "util.hpp"
+
 #define MAX(a, b) ((a > b)? a: b)
 MultibootMap memRegions[MAX_MAPPINGS] __attribute__((section(".lowdata")));
 
-
-static void e9_dump(uint32_t val){
-    char buff[9];
-    shittyHexStr32(val, buff);
-    for(int i=0; i < 8; ++ i){
-        outb(0xe9, buff[i]);
-    }
-    // /outb(0xe9, '\n');
-}
-static void e9_str(const char* str){
-    while(*str != '\0'){
-        outb(0xe9, *str);
-        ++str;
-    }
-}
 
 // incremental compacting of memory regions
 // index = the index of last entry, on return = new index of last entry
