@@ -28,6 +28,6 @@
 
 char* strcpy(char* dest, const char* src){
     char *orig_dest = dest;
-    while(*dest++ = *src++);
+    while((*dest++ = *src++));
     return dest;
 }
