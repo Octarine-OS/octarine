@@ -26,11 +26,11 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#define KLIB_NO_INLINE
-#include <klib.h>
+#include <string.h>
+#include <stdint.h>
 
-void* memcpy(void *dest, void *src, size_t sz){
-    uint8_t* s = (uint8_t*)src;
+void* memcpy(void *dest, const void *src, size_t sz){
+    const uint8_t* s = (const uint8_t*)src;
     uint8_t* d = (uint8_t*)dest;
 
     for(size_t i = 0; i < sz; ++i) {

@@ -26,10 +26,8 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#define KLIB_NO_INLINE
-
-#include <stddef.h>
-#include <klib.h>
+#include <string.h>
+#include <stdint.h>
 
 void* memset(void *p, int val, size_t sz){
     uint8_t v = ((uint32_t)val)&0xFF;

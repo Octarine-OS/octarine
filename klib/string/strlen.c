@@ -26,10 +26,7 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#define KLIB_NO_INLINE
-
-#include <stddef.h>
-#include <klib.h>
+#include <string.h>
 
 size_t strlen(const char *str) {
     size_t ctr = 0;

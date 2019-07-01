@@ -26,7 +26,7 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#include <stddef.h>
+#include <string.h>
 #include <stdint.h>
 
 int memcmp(const void* st1, const void* str2, size_t n){
