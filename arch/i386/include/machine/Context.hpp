@@ -2,9 +2,7 @@
 #define I386_MACHINE_CONTEXT
 
 #include <stdint.h>
-#ifdef i386
-#error "food"
-#endif
+
 
 //note this matches layout of "PUSHAD" func
 //TODO: save segment register state when that is an issue
