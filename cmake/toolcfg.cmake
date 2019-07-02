@@ -24,19 +24,23 @@
 #
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
+macro(set_kernel_flags)
+    set(common_flags
+        --target=i686-elf
+        -march=i686
+        -m32
+        -Wall
+        -fno-stack-protector
+        -ffreestanding
+        -finline-functions
+        -fno-builtin
+        -nostdlib
+        -nostdlibinc
+    )
+    list(JOIN common_flags " " common_flags)
 
-set(common_flags
-    --target=i686-elf
-    -march=i686
-    -m32
-    -Wall
-    -fno-stack-protector
-    -ffreestanding
-    -finline-functions
-    -fno-builtin
-    -nostdlib
-)
-list(JOIN common_flags " " common_flags)
 
-set(CMAKE_C_FLAGS "${common_flags}" CACHE STRING "")
-set(CMAKE_CXX_FLAGS "${common_flags} -fno-exceptions -fno-rtti" CACHE STRING "")
+    set(CMAKE_C_FLAGS "${common_flags} ${CMAKE_C_FLAGS}")
+
+    set(CMAKE_CXX_FLAGS "${common_flags} -fno-exceptions -fno-rtti ${CMAKE_CXX_FLAGS}" )
+endmacro()

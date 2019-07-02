@@ -25,11 +25,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
-
-
-
-
-
+set_kernel_flags()
 
 if(OCTARINE_MULTIBOOT)
 	add_executable(stage2.dbg multiboot.asm)

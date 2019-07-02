@@ -25,6 +25,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
+set_kernel_flags()
 add_subdirectory(arch)
 #add_library(kernel STATIC EXCLUDE_FROM_ALL main.cpp atkeyboard.cpp driveio.cpp terminal.cpp shell.cpp mm.cpp bioscall.asm cpumode.asm)
 

@@ -24,5 +24,6 @@
 #
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
+set_kernel_flags()
 
 add_subdirectory(tlsf)

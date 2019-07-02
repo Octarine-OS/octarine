@@ -24,18 +24,7 @@
 #
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
+set(CMAKE_CXX_STANDARD 14)
 
-set_kernel_flags()
-
-add_library(klib
-    cxxabi.cpp
-    string/memchr.c
-    string/memcmp.c
-    string/memcpy.c
-    string/memset.c
-    string/strcat.c
-    string/strcpy.c
-    string/strlen.c
-) 
-target_include_directories(klib 
-    PUBLIC include)
+add_executable(mbinfo mbinfo.cpp)
+#target_include_directories(mbinfo PRIVATE ../include)
