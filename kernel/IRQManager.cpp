@@ -1,18 +1,9 @@
 #include "IRQManager.hpp"
 
-int IRQManager::SetHandler(unsigned int irq, IRQHandler handler){
-    return 0;
-}
+int IRQManager::SetHandler(unsigned int irq, IRQHandler handler) { return 0; }
 
-void IRQManager::Initialize() {
+void IRQManager::Initialize() {}
 
-}
+int SetHandler(unsigned int irq, IRQHandler handler) { return 0; }
 
-int SetHandler(unsigned int irq, IRQHandler handler){
-    return 0;
-}
-
-void IRQManager::DoIRQ(unsigned int irq){
-
-}
-  
+void IRQManager::DoIRQ(unsigned int irq) {}

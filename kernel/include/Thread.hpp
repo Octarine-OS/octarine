@@ -29,30 +29,30 @@
 #ifndef THREAD_HPP
 #define THREAD_HPP
 
-#include "machine/Context.hpp"
 #include "List.hpp"
+#include "machine/Context.hpp"
 
 struct Thread {
 
-    int id;
-    arch::Context state; // TODO rename to context?
-    ListHook<Thread> _listHook;
+	int id;
+	arch::Context state; // TODO rename to context?
+	ListHook<Thread> _listHook;
 };
 
 typedef List<Thread, &Thread::_listHook> ThreadList;
-void TaskSwitchIRQ(arch::Context *state);
+void TaskSwitchIRQ(arch::Context* state);
 namespace Scheduler {
 
-    void Init();
-    Thread *InitThread(void (*entry)());
-    //TODO this is all horibly intolerant of multiprocessor
+void Init();
+Thread* InitThread(void (*entry)());
+// TODO this is all horibly intolerant of multiprocessor
 
-    void SwitchToThread(Thread * t);
+void SwitchToThread(Thread* t);
 
-    Thread* GetCurrentThread();
-     Thread* GetNextThread();
+Thread* GetCurrentThread();
+Thread* GetNextThread();
 
-    void HandleTaskSwitch();
-}
+void HandleTaskSwitch();
+} // namespace Scheduler
 
 #endif

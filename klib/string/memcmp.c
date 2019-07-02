@@ -26,16 +26,16 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 
-int memcmp(const void* st1, const void* str2, size_t n){
-    const uint8_t *p1 = st1;
-    const uint8_t *p2 = str2;
-    for(size_t i = 0; i < n; ++i){
-        if(p1[i] != p2[i]){
-            return p1[i] - p2[i];
-        }
-    }
-    return 0;
+int memcmp(const void* st1, const void* str2, size_t n) {
+	const uint8_t* p1 = st1;
+	const uint8_t* p2 = str2;
+	for (size_t i = 0; i < n; ++i) {
+		if (p1[i] != p2[i]) {
+			return p1[i] - p2[i];
+		}
+	}
+	return 0;
 }

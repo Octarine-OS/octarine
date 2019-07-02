@@ -28,10 +28,10 @@
 
 #include <string.h>
 
-size_t strlen(const char *str) {
-    size_t ctr = 0;
-    while(str[ctr] != '\0'){
-        ++ctr;
-    }
-    return ctr;
+size_t strlen(const char* str) {
+	size_t ctr = 0;
+	while (str[ctr] != '\0') {
+		++ctr;
+	}
+	return ctr;
 }

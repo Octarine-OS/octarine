@@ -33,10 +33,10 @@
 #define MAX_MAPPINGS 64
 
 typedef struct {
-    uint32_t size; //size of the struct not the mapping
-    uint64_t addr;
-    uint64_t length;
-    uint32_t type;
+	uint32_t size; // size of the struct not the mapping
+	uint64_t addr;
+	uint64_t length;
+	uint32_t type;
 
 } MultibootMap;
 

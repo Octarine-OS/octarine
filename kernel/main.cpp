@@ -26,26 +26,26 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#include <stdlib.h>
+#include "InterruptManager.hpp"
+#include "PIC.hpp"
 #include "kernel/atkeyboard.h"
 #include "kernel/mm.h"
 #include "kernel/terminal.h"
 #include "shell.h"
-#include "InterruptManager.hpp"
-#include "PIC.hpp"
+#include <stdlib.h>
 
-Terminal *globalTerm = 0;
+Terminal* globalTerm = 0;
 extern "C" void kmain(uint8_t bootdrive) {
-    initMM();
-    Terminal term;
+	initMM();
+	Terminal term;
 	globalTerm = &term;
-    ATKeyboard.init();
-    term.showCursor();
-    term.printString("OCTARINE V1.0\n");
-    term.printString("Boot drive: ");
-    char buff[32];
-    ucvt(bootdrive, buff, 10, 3, 0);
-    term.printString(buff);
-    term.newLine();
-    runShell(term);
+	ATKeyboard.init();
+	term.showCursor();
+	term.printString("OCTARINE V1.0\n");
+	term.printString("Boot drive: ");
+	char buff[32];
+	ucvt(bootdrive, buff, 10, 3, 0);
+	term.printString(buff);
+	term.newLine();
+	runShell(term);
 }

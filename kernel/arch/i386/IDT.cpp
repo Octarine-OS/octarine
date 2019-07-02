@@ -30,138 +30,135 @@
 #include "IRQManager.hpp"
 #include "terminal.h"
 #include "util.hpp"
+const uintptr_t KERNEL_VIRTUAL_BASE = 0xC0000000;
 
 extern "C" void* isr_table[];
 
-//TODO this will break when we change to higher-half kernel
-i386::IDT::IDT(){
-    for(int i=0; i < 256; ++i){
-    //TODO fix cs val
-    //TODO fix type val
-        SetIDTVector((uint8_t)i, 8, isr_table[i], 0, 0x0E);
-    }
+// TODO this will break when we change to higher-half kernel
+i386::IDT::IDT() {
+	for (int i = 0; i < 256; ++i) {
+		// TODO fix cs val
+		// TODO fix type val
+		SetIDTVector((uint8_t)i, 8, isr_table[i], 0, 0x0E);
+	}
 
-    static struct {
-        uint16_t limit;
-        void *idt_addr;
-    } __attribute__((packed)) idtr;
-    idtr.limit=sizeof(idt)-1;
-    idtr.idt_addr = idt; // TODO get physical address
-    asm volatile("lidt %0" : : "m"(idtr));
+	static struct {
+		uint16_t limit;
+		void* idt_addr;
+	} __attribute__((packed)) idtr;
+	idtr.limit = sizeof(idt) - 1;
+	idtr.idt_addr = idt - KERNEL_VIRTUAL_BASE;
+	asm volatile("lidt %0" : : "m"(idtr));
 }
 
-void i386::IDT::Dummy(){
+void i386::IDT::Dummy() {}
+
+void i386::IDT::SetIDTVector(uint8_t vec, uint16_t cs, void* isr, uint8_t dpl,
+                             uint8_t type) {
+	idt[vec].offset_low = ((uint32_t)isr) & 0xFFFF;
+	idt[vec].selector = cs;
+	idt[vec].zero = 0;
+
+	idt[vec].type_attr = 0x80 | ((dpl & 0x3) << 5) | (type & 0xF);
+	idt[vec].offset_high = (((uint32_t)isr) >> 16) & 0xFFFF;
 }
 
-void i386::IDT::SetIDTVector(uint8_t vec, uint16_t cs, void *isr, uint8_t dpl, uint8_t type){
-    idt[vec].offset_low = ((uint32_t)isr) & 0xFFFF;
-    idt[vec].selector = cs;
-    idt[vec].zero = 0;
-    
-    idt[vec].type_attr = 0x80 | ((dpl & 0x3)<<5) | (type & 0xF);
-    idt[vec].offset_high = (((uint32_t)isr) >> 16) & 0xFFFF;
-    
-}
+i386::IDT idt;
 
-
-
-i386::IDT idt; 
-
-
-static const char *exceptionNames[] = {
-  "Divide by zero error",
-  "Debug",
-  "Non-maskable Interrupt",
-  "Breakpoint",
-  "Overflow",
-  "Bound Range Exceeded",
-  "Invalid Opcode",
-  "Device Not Available",
-  "Double Fault",
-  "Co-Processor Segment Overrun",
-  "Invalid TSS",
-  "Stack-Segment Fault",
-  "Segment Not Present",
-  "General Protection Fault",
-  "Page Fault",
-  "Reserved (0x0F)",
-  "x87 Floating-Point Exception",
-  "Alignment Check",
-  "Machine Check",
-  "SIMD Floating-Point Exception",
-  "Virtualization Exception",
-  "Reserved (0x15)",
-  "Reserved (0x16)",
-  "Reserved (0x17)",
-  "Reserved (0x18)",
-  "Reserved (0x19)",
-  "Reserved (0x1A)",
-  "Reserved (0x1B)",
-  "Reserved (0x1C)",
-  "Reserved (0x1D)",
-  "Security Exception",
-  "Reserved (0x1F)"
+static const char* exceptionNames[] = {
+    "Divide by zero error",
+    "Debug",
+    "Non-maskable Interrupt",
+    "Breakpoint",
+    "Overflow",
+    "Bound Range Exceeded",
+    "Invalid Opcode",
+    "Device Not Available",
+    "Double Fault",
+    "Co-Processor Segment Overrun",
+    "Invalid TSS",
+    "Stack-Segment Fault",
+    "Segment Not Present",
+    "General Protection Fault",
+    "Page Fault",
+    "Reserved (0x0F)",
+    "x87 Floating-Point Exception",
+    "Alignment Check",
+    "Machine Check",
+    "SIMD Floating-Point Exception",
+    "Virtualization Exception",
+    "Reserved (0x15)",
+    "Reserved (0x16)",
+    "Reserved (0x17)",
+    "Reserved (0x18)",
+    "Reserved (0x19)",
+    "Reserved (0x1A)",
+    "Reserved (0x1B)",
+    "Reserved (0x1C)",
+    "Reserved (0x1D)",
+    "Security Exception",
+    "Reserved (0x1F)",
 };
 
-static void dumpRegister(int line, int col, const char * name, uint32_t val){
-    Terminal &term = *globalTerm;
-    char buff[5];
-    buff[4] = 0;
-    const int colNum = 1 + (17 * col);
+static void dumpRegister(int line, int col, const char* name, uint32_t val) {
+	Terminal& term = *globalTerm;
+	char buff[5];
+	buff[4] = 0;
+	const int colNum = 1 + (17 * col);
 
-    term.setCursor(colNum, line);
+	term.setCursor(colNum, line);
 
-
-    term.printString(name);
-    term.printString(": ");
-    shittyHexStr((val >> 16) & 0xFFFF, buff);
-    term.printString(buff);
-    term.printChar(' ');
-    shittyHexStr(val & 0xFFFF, buff);
-    term.printString(buff);
+	term.printString(name);
+	term.printString(": ");
+	shittyHexStr((val >> 16) & 0xFFFF, buff);
+	term.printString(buff);
+	term.printChar(' ');
+	shittyHexStr(val & 0xFFFF, buff);
+	term.printString(buff);
 }
 
+static void ExceptionPanic(arch::Context& ctx) {
+	Terminal& term = *globalTerm;
 
-static void ExceptionPanic(arch::Context &ctx) {
-    Terminal &term = *globalTerm;
+	term.setAttr(0x47);
+	term.clearScreen();
+	term.setCursor(1, 0);
+	term.printString("KERNEL PANIC, UNHANDLED EXCEPTION");
 
-    term.setAttr(0x47);
-    term.clearScreen();
-    term.setCursor(1, 0);
-    term.printString("KERNEL PANIC, UNHANDLED EXCEPTION");
+	if (ctx.intNum <= 0x1f) {
+		term.setCursor(1, 1);
+		term.printString(exceptionNames[ctx.intNum]);
+	}
 
-    if(ctx.intNum <= 0x1f){
-        term.setCursor(1, 1);
-        term.printString(exceptionNames[ctx.intNum]);
-    }
+	dumpRegister(10, 0, "EAX", ctx.eax);
+	dumpRegister(10, 1, "ECX", ctx.ecx);
 
-    dumpRegister(10, 0, "EAX", ctx.eax);
-    dumpRegister(10, 1, "ECX", ctx.ecx);
+	dumpRegister(11, 0, "EDX", ctx.edx);
+	dumpRegister(11, 1, "EBX", ctx.ebx);
 
-    dumpRegister(11, 0, "EDX", ctx.edx);
-    dumpRegister(11, 1, "EBX", ctx.ebx);
+	dumpRegister(12, 0, "ESP", ctx.esp);
+	dumpRegister(12, 1, "EBP", ctx.ebp);
 
-    dumpRegister(12, 0, "ESP", ctx.esp);
-    dumpRegister(12, 1, "EBP", ctx.ebp);
+	dumpRegister(13, 0, "ESI", ctx.esi);
+	dumpRegister(13, 1, "EDI", ctx.edi);
 
-    dumpRegister(13, 0, "ESI", ctx.esi);
-    dumpRegister(13, 1, "EDI", ctx.edi);
-
-    dumpRegister(14, 0, "EIP", ctx.eip);
-    while(1){}
+	dumpRegister(14, 0, "EIP", ctx.eip);
+	while (1) {
+	}
 }
 
-void i386::IDT::Interrupt(arch::Context &ctx){
-  if (ctx.intNum <= 0x1F){
-    ExceptionPanic(ctx);
-  }
-  if(ctx.intNum >=256){
-    globalTerm->printString("ERROR: bad interrupt number: ");
-    char buff[9];
-    shittyHexStr32(ctx.intNum, buff);
-    buff[8] = 0;
-    globalTerm->printString(buff);
-    while(true){};
-  }
-  IRQManager::DoIRQ(ctx.intNum - 0x20);
+void i386::IDT::Interrupt(arch::Context& ctx) {
+	if (ctx.intNum <= 0x1F) {
+		ExceptionPanic(ctx);
+	}
+	if (ctx.intNum >= 256) {
+		globalTerm->printString("ERROR: bad interrupt number: ");
+		char buff[9];
+		shittyHexStr32(ctx.intNum, buff);
+		buff[8] = 0;
+		globalTerm->printString(buff);
+		while (true) {
+		};
+	}
+	IRQManager::DoIRQ(ctx.intNum - 0x20);
 }

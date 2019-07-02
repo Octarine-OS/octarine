@@ -32,28 +32,29 @@
 #include <stdint.h>
 
 class Terminal {
-    uint8_t hpos, vpos;
-    uint16_t buffer[25][80];
-    uint8_t offset; //line offset in buffer
-    uint16_t attr;
-    void setHWCursor(uint8_t x, uint8_t y);
-    void putChar(char c);
-public:
-    Terminal();
-    void printString(const char* str);
-    
-    //TODO this is a hack
-    void printUInt(uint32_t val);
-    void clearScreen();
-    void newLine();
-    void setCursor(uint8_t x, uint8_t y);
-    void getCursor(uint8_t *x, uint8_t *y);
-    void setAttr(uint8_t _attr);
-    void scroll();
-    void printChar(char c);
-    void showCursor();
-    void hideCursor();
+	uint8_t hpos, vpos;
+	uint16_t buffer[25][80];
+	uint8_t offset; // line offset in buffer
+	uint16_t attr;
+	void setHWCursor(uint8_t x, uint8_t y);
+	void putChar(char c);
+
+  public:
+	Terminal();
+	void printString(const char* str);
+
+	// TODO this is a hack
+	void printUInt(uint32_t val);
+	void clearScreen();
+	void newLine();
+	void setCursor(uint8_t x, uint8_t y);
+	void getCursor(uint8_t* x, uint8_t* y);
+	void setAttr(uint8_t _attr);
+	void scroll();
+	void printChar(char c);
+	void showCursor();
+	void hideCursor();
 };
 
-extern Terminal *globalTerm; //TODO this is very inelligant
+extern Terminal* globalTerm; // TODO this is very inelligant
 #endif

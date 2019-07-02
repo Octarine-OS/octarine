@@ -31,8 +31,8 @@
 
 #include <stdint.h>
 
-void shittyHexStr(uint16_t val, char *buff);
+void shittyHexStr(uint16_t val, char* buff);
 
-void shittyHexStr32(uint32_t val, char * buff);
+void shittyHexStr32(uint32_t val, char* buff);
 
 #endif

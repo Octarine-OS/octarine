@@ -1,0 +1,8 @@
+---
+BinPackArguments: 'true'
+PointerAlignment: Left
+DerivePointerAlignment: 'false'
+IndentWidth: 4
+TabWidth: 4
+UseTab: 'ForIndentation'
+...

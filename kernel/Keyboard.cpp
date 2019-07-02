@@ -26,19 +26,16 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#include <io/Keyboard.hpp>
 #include "portio.h"
+#include <io/Keyboard.hpp>
 using namespace io;
 
-void Keyboard::KeyDown(keycode_t key){
-    outb(0xe9, 'K');
-    if(key == KEY_A){
-        outb(0xe9, 'A');
-    }
-    outb(0xe9, '\n');
+void Keyboard::KeyDown(keycode_t key) {
+	outb(0xe9, 'K');
+	if (key == KEY_A) {
+		outb(0xe9, 'A');
+	}
+	outb(0xe9, '\n');
 }
 
-void Keyboard::KeyUp(keycode_t key){
-
-}
-
+void Keyboard::KeyUp(keycode_t key) {}

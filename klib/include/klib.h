@@ -29,18 +29,19 @@
 #ifndef KLIB_H
 #define KLIB_H
 
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <sys/cdefs.h>
 BEGIN_DEF
-
 
 void* tlsf_malloc(size_t);
 void tlsf_free(void*);
 void* tlsf_realloc(void*, size_t);
-static inline void *malloc(size_t size) {return tlsf_malloc(size);}
-static inline void free(void *ptr){tlsf_free(ptr);}
-static inline void *realloc(void* ptr, size_t size){return tlsf_realloc(ptr,size);}
+static inline void* malloc(size_t size) { return tlsf_malloc(size); }
+static inline void free(void* ptr) { tlsf_free(ptr); }
+static inline void* realloc(void* ptr, size_t size) {
+	return tlsf_realloc(ptr, size);
+}
 END_DEF
 
 #endif

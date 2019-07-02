@@ -31,12 +31,12 @@
 
 #include <stdint.h>
 
-//template<uint8_t basePort>
+// template<uint8_t basePort>
 namespace PIC {
-  void init();
-  
-  void sendEOI(uint8_t irq);
-  void remap(uint8_t offset1, uint8_t offset2);
-  void setMask(uint8_t mask);
-}
+void init();
+
+void sendEOI(uint8_t irq);
+void remap(uint8_t offset1, uint8_t offset2);
+void setMask(uint8_t mask);
+} // namespace PIC
 #endif

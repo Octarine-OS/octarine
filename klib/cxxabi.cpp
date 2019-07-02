@@ -26,24 +26,20 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-// Stuff for c++ linkage 
+// Stuff for c++ linkage
 
-void *__dso_handle;
+void* __dso_handle;
 extern "C" {
-    int __cxa_atexit(void (*destructor) (void *), void *arg, void *dso);
-
+int __cxa_atexit(void (*destructor)(void*), void* arg, void* dso);
 }
 
-int __cxa_atexit(void (*destructor) (void *), void *arg, void *dso){
-    (void) destructor;
-    (void) arg;
-    (void) dso;
-    return 0;
+int __cxa_atexit(void (*destructor)(void*), void* arg, void* dso) {
+	(void)destructor;
+	(void)arg;
+	(void)dso;
+	return 0;
 }
-void __cxa_finalize(void *f){
-    (void)f;
+void __cxa_finalize(void* f) { (void)f; }
 
-}
-
-void  operator delete (void *, unsigned long) throw() { };
-void  operator delete (void *) throw() { };
+void operator delete(void*, unsigned long)throw(){};
+void operator delete(void*)throw(){};

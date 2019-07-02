@@ -30,17 +30,16 @@
 #define KEYBOARD_H
 
 typedef struct {
-    void (*init)();
-    bool (*hasKey)();
-    char (*getKey)();
-    char (*getKeyNB)();
+	void (*init)();
+	bool (*hasKey)();
+	char (*getKey)();
+	char (*getKeyNB)();
 } Keyboard;
 
 #define KEY_NONE 0
-//LF char
+// LF char
 #define KEY_ENTER '\x0A'
-//BS char
+// BS char
 #define KEY_BACKSPACE '\x08'
-
 
 #endif

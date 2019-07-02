@@ -26,16 +26,16 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 
-void* memcpy(void *dest, const void *src, size_t sz){
-    const uint8_t* s = (const uint8_t*)src;
-    uint8_t* d = (uint8_t*)dest;
+void* memcpy(void* dest, const void* src, size_t sz) {
+	const uint8_t* s = (const uint8_t*)src;
+	uint8_t* d = (uint8_t*)dest;
 
-    for(size_t i = 0; i < sz; ++i) {
-        d[i] = s[i];
-    }
+	for (size_t i = 0; i < sz; ++i) {
+		d[i] = s[i];
+	}
 
-    return dest;
+	return dest;
 }

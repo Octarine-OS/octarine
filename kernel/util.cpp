@@ -27,18 +27,18 @@
  */
 
 #include "util.hpp"
-static char hexLookup[] = {'0', '1', '2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+static char hexLookup[] = {'0', '1', '2', '3', '4', '5', '6', '7',
+                           '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
-void shittyHexStr(uint16_t val, char *buff){
-    for(int i=0; i<4; ++i){
-        *buff = hexLookup[(val & 0xF000) >> 12];
-        val = val << 4;
-        ++buff;
-    }
-
+void shittyHexStr(uint16_t val, char* buff) {
+	for (int i = 0; i < 4; ++i) {
+		*buff = hexLookup[(val & 0xF000) >> 12];
+		val = val << 4;
+		++buff;
+	}
 }
 
- void shittyHexStr32(uint32_t val, char * buff){
-     shittyHexStr((val&0xFFFF0000)>>16, buff);
-     shittyHexStr(val&0xFFFF, buff+4);
+void shittyHexStr32(uint32_t val, char* buff) {
+	shittyHexStr((val & 0xFFFF0000) >> 16, buff);
+	shittyHexStr(val & 0xFFFF, buff + 4);
 }

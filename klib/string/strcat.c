@@ -28,11 +28,11 @@
 
 #include <string.h>
 
-char* strcat(char* s1, const char* s2){
-    char* tmp = s1;
-    while(*tmp){
-        ++tmp;
-    }
-    strcpy(s1, s2);
-    return tmp;
+char* strcat(char* s1, const char* s2) {
+	char* tmp = s1;
+	while (*tmp) {
+		++tmp;
+	}
+	strcpy(s1, s2);
+	return tmp;
 }

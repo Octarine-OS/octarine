@@ -26,14 +26,14 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 
-void* memset(void *p, int val, size_t sz){
-    uint8_t v = ((uint32_t)val)&0xFF;
-    uint8_t *dst = (uint8_t*)p;
-    for(size_t i = 0; i < sz; ++ i){
-        dst[i] = v;
-    }
-    return p;
+void* memset(void* p, int val, size_t sz) {
+	uint8_t v = ((uint32_t)val) & 0xFF;
+	uint8_t* dst = (uint8_t*)p;
+	for (size_t i = 0; i < sz; ++i) {
+		dst[i] = v;
+	}
+	return p;
 }

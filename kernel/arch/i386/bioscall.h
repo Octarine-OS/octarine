@@ -30,6 +30,6 @@
 #define BIOSCALL_H
 #include "registers.h"
 
-extern "C" void callBios(int intnum, Registers *reg);
+extern "C" void callBios(int intnum, Registers* reg);
 
 #endif

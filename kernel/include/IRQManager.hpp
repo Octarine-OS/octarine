@@ -31,15 +31,15 @@
 
 #include <machine/Context.hpp>
 
-typedef  void (*IRQHandler)();
+typedef void (*IRQHandler)();
 
 namespace IRQManager {
-  
-  void Initialize();
-  int SetHandler(unsigned int irq, IRQHandler handler);
 
-  void DoIRQ(unsigned int irq);
-  
-}
+void Initialize();
+int SetHandler(unsigned int irq, IRQHandler handler);
+
+void DoIRQ(unsigned int irq);
+
+} // namespace IRQManager
 
 #endif

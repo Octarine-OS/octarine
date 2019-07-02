@@ -34,41 +34,41 @@
 
 namespace i386 {
 typedef struct {
-    unsigned int present:1;
-    unsigned int DPL:2;
-    unsigned int storage:1;
-    enum {
-        TASK_32 = 0x5,
-        INT_16 = 0x6,
-        TRAP_16 = 0x7,
-        INT_32 = 0xE,
-        TRAP_32 = 0xF } type : 4;
-    
+	unsigned int present : 1;
+	unsigned int DPL : 2;
+	unsigned int storage : 1;
+	enum {
+		TASK_32 = 0x5,
+		INT_16 = 0x6,
+		TRAP_16 = 0x7,
+		INT_32 = 0xE,
+		TRAP_32 = 0xF
+	} type : 4;
+
 } IDT_attr;
 
 typedef struct {
-    uint16_t offset_low;
-    uint16_t selector;
-    uint8_t zero;
-    uint8_t type_attr;
-    uint16_t offset_high;
+	uint16_t offset_low;
+	uint16_t selector;
+	uint8_t zero;
+	uint8_t type_attr;
+	uint16_t offset_high;
 
 } IDT_entry;
 
-
 class IDT {
-public:
-    IDT();
-    static void Dummy(); //Hack to make sure we get linked
-private:
+  public:
+	IDT();
+	static void Dummy(); // Hack to make sure we get linked
+  private:
+	void SetIDTVector(uint8_t vec, uint16_t cs, void* isr, uint8_t dpl,
+	                  uint8_t type);
+	static void Interrupt(arch::Context& ctx);
 
-    void SetIDTVector(uint8_t vec, uint16_t cs, void *isr, uint8_t dpl, uint8_t type);
-    static void Interrupt(arch::Context &ctx);
-private:
-    IDT_entry idt[256];
+  private:
+	IDT_entry idt[256];
 };
 
-
-}
+} // namespace i386
 
 #endif

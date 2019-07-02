@@ -26,113 +26,111 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#include <stdint.h>
 #include "../include/multiboot.h"
-#include <iostream>
 #include <fstream>
-#include <stdio.h>
+#include <iostream>
 #include <memory>
+#include <stdint.h>
+#include <stdio.h>
 using namespace std;
 
-
-static void print_usage(){
-    // TODO print usage info
+static void print_usage() {
+	// TODO print usage info
 }
 
-unique_ptr<multiboot_header> find_header(istream& f){
-    // get the file size
-    f.seekg(0, f.end);
-    size_t length = f.tellg();
-    f.seekg(0, f.beg);
-    if (length > MULTIBOOT_SEARCH){
-        length = MULTIBOOT_SEARCH;
-    }
+unique_ptr<multiboot_header> find_header(istream& f) {
+	// get the file size
+	f.seekg(0, f.end);
+	size_t length = f.tellg();
+	f.seekg(0, f.beg);
+	if (length > MULTIBOOT_SEARCH) {
+		length = MULTIBOOT_SEARCH;
+	}
 
-    length &= ~3; // Round down to multiple of 4;
-    uint32_t *buffer = new uint32_t[length / 4];
-    f.read(reinterpret_cast<char*>(buffer), length);
+	length &= ~3; // Round down to multiple of 4;
+	uint32_t* buffer = new uint32_t[length / 4];
+	f.read(reinterpret_cast<char*>(buffer), length);
 
-    // Spec says the multiboot header must be entirely within the search area
-    length -= sizeof(multiboot_header) - 4;
+	// Spec says the multiboot header must be entirely within the search area
+	length -= sizeof(multiboot_header) - 4;
 
-    for(size_t i = 0; i < length/4; ++i){
-        if(buffer[i] == MULTIBOOT_HEADER_MAGIC){
-            // check if the checksum is good
-            const multiboot_header* header = reinterpret_cast<const multiboot_header*>(&buffer[i]);
-            if(header->checksum == 0 - (header->magic + header->flags)){
-                auto ret = std::make_unique<multiboot_header>();
-                *ret = *header;
-                delete[] buffer;
-                return ret;
-
-            }
-        }
-    }
-    return nullptr;
+	for (size_t i = 0; i < length / 4; ++i) {
+		if (buffer[i] == MULTIBOOT_HEADER_MAGIC) {
+			// check if the checksum is good
+			const multiboot_header* header =
+			    reinterpret_cast<const multiboot_header*>(&buffer[i]);
+			if (header->checksum == 0 - (header->magic + header->flags)) {
+				auto ret = std::make_unique<multiboot_header>();
+				*ret = *header;
+				delete[] buffer;
+				return ret;
+			}
+		}
+	}
+	return nullptr;
 }
 
-static void print_header(const multiboot_header *header) {
-    puts("Flags:");
-    const uint32_t flags = header->flags;
-    #define PFLAG(x)\
-        if(flags & MULTIBOOT_##x) {\
-            puts("\t" #x ); \
-        }
+static void print_header(const multiboot_header* header) {
+	puts("Flags:");
+	const uint32_t flags = header->flags;
+#define PFLAG(x)                                                               \
+	if (flags & MULTIBOOT_##x) {                                               \
+		puts("\t" #x);                                                         \
+	}
 
-    PFLAG(PAGE_ALIGN)
-    PFLAG(MEMORY_INFO)
-    PFLAG(VIDEO_MODE)
-    PFLAG(AOUT_KLUDGE)
+	PFLAG(PAGE_ALIGN)
+	PFLAG(MEMORY_INFO)
+	PFLAG(VIDEO_MODE)
+	PFLAG(AOUT_KLUDGE)
 
-    #undef PFLAG
-    #define PRINT_FIELD(field, width, format) \
-        printf("%-" #width "s" format "\n", #field ":",  header->field);
+#undef PFLAG
+#define PRINT_FIELD(field, width, format)                                      \
+	printf("%-" #width "s" format "\n", #field ":", header->field);
 
-    
-    if(flags & MULTIBOOT_AOUT_KLUDGE){
-        #define PRINT_ADDR_FIELD(x) PRINT_FIELD(x, 16, "0x%08x")
-        
-        PRINT_ADDR_FIELD(header_addr)
-        PRINT_ADDR_FIELD(load_addr)
-        PRINT_ADDR_FIELD(load_end_addr)
-        PRINT_ADDR_FIELD(bss_end_addr)
-        PRINT_ADDR_FIELD(entry_addr)
+	if (flags & MULTIBOOT_AOUT_KLUDGE) {
+#define PRINT_ADDR_FIELD(x) PRINT_FIELD(x, 16, "0x%08x")
 
-        #undef PRINT_ADDR_FIELD
-    }
+		PRINT_ADDR_FIELD(header_addr)
+		PRINT_ADDR_FIELD(load_addr)
+		PRINT_ADDR_FIELD(load_end_addr)
+		PRINT_ADDR_FIELD(bss_end_addr)
+		PRINT_ADDR_FIELD(entry_addr)
 
-    if(true ||flags & MULTIBOOT_VIDEO_MODE) {
-        #define PRINT_VIDEO_FIELD(x) PRINT_FIELD(x, 11, "%d")
-        PRINT_VIDEO_FIELD(mode_type)
-        PRINT_VIDEO_FIELD(width)
-        PRINT_VIDEO_FIELD(height)
-        PRINT_VIDEO_FIELD(depth)
-        #undef PRINT_VIDEO_FIELD
-    }
+#undef PRINT_ADDR_FIELD
+	}
+
+	if (true || flags & MULTIBOOT_VIDEO_MODE) {
+#define PRINT_VIDEO_FIELD(x) PRINT_FIELD(x, 11, "%d")
+		PRINT_VIDEO_FIELD(mode_type)
+		PRINT_VIDEO_FIELD(width)
+		PRINT_VIDEO_FIELD(height)
+		PRINT_VIDEO_FIELD(depth)
+#undef PRINT_VIDEO_FIELD
+	}
 }
 
-static void process_file(const char *filename) {
-    ifstream f;
-    f.open(filename);
-    auto header = find_header(f);
-    if(header == nullptr){
-        cerr << "Could not find multiboot header in " << filename << "\n";
-        return;
-    }
-    puts(filename);
-    print_header(header.get());
-    f.close();
-    puts("\n");
+static void process_file(const char* filename) {
+	ifstream f;
+	f.open(filename);
+	auto header = find_header(f);
+	if (header == nullptr) {
+		cerr << "Could not find multiboot header in " << filename << "\n";
+		return;
+	}
+	puts(filename);
+	print_header(header.get());
+	f.close();
+	puts("\n");
 }
 
-int main(int argc, char **argv) {
-    if(argc == 0){
-        print_usage();
-        return 0;
-    }
+int main(int argc, char** argv) {
+	if (argc == 0) {
+		print_usage();
+		return 0;
+	}
 
-    for(int i= 1; i < argc; ++i) {
-        process_file(argv[i]);
-    }
-    return 0;
+	for (int i = 1; i < argc; ++i) {
+		process_file(argv[i]);
+	}
+	return 0;
 }
