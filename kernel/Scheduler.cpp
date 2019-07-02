@@ -33,6 +33,7 @@
 #include "util.hpp"
 #include <stdint.h>
 #include "e9dump.hpp"
+#include <string.h>
 
 namespace{
     class ThreadSceduler{

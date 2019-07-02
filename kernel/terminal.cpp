@@ -29,6 +29,7 @@
 #include <terminal.h>
 #include <klib.h>
 #include <portio.h>
+#include <string.h>
 
 #include "util.hpp"
 const uint32_t lineSize = 2 * 80;

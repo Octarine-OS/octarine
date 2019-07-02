@@ -33,13 +33,6 @@
 #include <stddef.h>
 #include <sys/cdefs.h>
 BEGIN_DEF
-void* memcpy(void * dst, void *src, size_t sz);
-
-void* memset(void *dst, int value, size_t num);
-
-int memcmp(void* p1, void* p2, size_t len );
-
-size_t strlen(const char *str);
 
 
 void* tlsf_malloc(size_t);
