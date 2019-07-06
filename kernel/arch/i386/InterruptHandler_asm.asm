@@ -69,7 +69,7 @@ interrupt_handler_core:
   call _ZN4i3863IDT9InterruptERNS_7ContextE
   
   ;clean up stack
-  add esp, 8 
+  add esp, 4
   
   ;restore old state
   popad
