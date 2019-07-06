@@ -1,9 +1,23 @@
 #include "IRQManager.hpp"
 
-int IRQManager::SetHandler(unsigned int irq, IRQHandler handler) { return 0; }
+static constexpr int MAX_IRQ_NUM = 32;
+static IRQHandler handlers[MAX_IRQ_NUM];
+int IRQManager::SetHandler(unsigned int irq, IRQHandler handler) {
+	handlers[irq] = handler;
+	return 0;
+}
 
-void IRQManager::Initialize() {}
+void IRQManager::Initialize() {
+	for (int i = 0; i < MAX_IRQ_NUM; ++i) {
+		handlers[i] = nullptr;
+	}
+}
 
-int SetHandler(unsigned int irq, IRQHandler handler) { return 0; }
-
-void IRQManager::DoIRQ(unsigned int irq) {}
+void IRQManager::DoIRQ(unsigned int irq) {
+	if (irq < MAX_IRQ_NUM) {
+		IRQHandler handler = handlers[irq];
+		if (handler != nullptr) {
+			handler();
+		}
+	}
+}
