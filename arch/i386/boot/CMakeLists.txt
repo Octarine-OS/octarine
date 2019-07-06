@@ -61,5 +61,6 @@ add_custom_command(
     #TODO better search/names for strip command
     COMMAND ${CMAKE_COMMAND} -E copy stage2.dbg stage2.bin
     #COMMAND i686-elf-strip -g stage2.bin
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 add_custom_target(stage2 ALL DEPENDS stage2.bin)
