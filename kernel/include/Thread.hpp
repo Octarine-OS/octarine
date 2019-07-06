@@ -31,20 +31,60 @@
 
 #include "List.hpp"
 #include "machine/Context.hpp"
+#include <stddef.h>
+#include <utility.hpp>
+
+class ThreadStack {
+	void* _base;
+	void* _top;
+
+  public:
+	ThreadStack(ThreadStack&) = delete;
+	ThreadStack(ThreadStack&& other);
+
+	template <typename T> void push(const T& value) {
+		// TODO: should we be doing some checks on T?
+		size_t size = sizeof(T);
+		// Allocate size for object, and round to 8 byte boundry
+		_top = reinterpret_cast<void*>(
+		    (reinterpret_cast<uintptr_t>(_top) - size) & ~7);
+		new (_top) T(value);
+	}
+
+	void* top() { return _top; }
+
+	static ThreadStack make(size_t size);
+
+  private:
+	ThreadStack(void* addr);
+	~ThreadStack();
+};
 
 struct Thread {
-
 	int id;
 	arch::Context state; // TODO rename to context?
 	ListHook<Thread> _listHook;
+	ThreadStack stack;
 };
 
 typedef List<Thread, &Thread::_listHook> ThreadList;
 void TaskSwitchIRQ(arch::Context* state);
-namespace Scheduler {
 
+namespace Scheduler {
 void Init();
-Thread* InitThread(void (*entry)());
+//Thread* InitThread(void (*entry)());
+
+//private:
+Thread* _InitThread(ThreadStack stack);
+
+template<typename T>
+Thread* InitThread(const T& runnable){
+    // TODO parameterize stack size
+    ThreadStack stack = ThreadStack::make(2048);
+    stack.push(runnable);
+    _InitThread(std::move(stack));
+}
+}
 // TODO this is all horibly intolerant of multiprocessor
 
 void SwitchToThread(Thread* t);

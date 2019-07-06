@@ -42,6 +42,7 @@ add_library(kernel STATIC EXCLUDE_FROM_ALL
 	#InterruptManager.cpp
 	Keyboard.cpp
 	PS2Keyboard.cpp
+	Thread.cpp
 )
 if(OCTARINE_MULTIBOOT)
 	target_sources(kernel PRIVATE MBootMain.cpp)
