@@ -28,18 +28,19 @@
 
 #ifndef IO_KEYBOARD_HPP
 #define IO_KEYBOARD_HPP
+#include "Device.hpp"
 #include "KeyCodes.h"
 namespace io {
 
+class Keyboard : public Device {
+  public:
+	Keyboard() {}
+	virtual ~Keyboard() {}
 
-class Keyboard {
-    public:
-    Keyboard() {}
-    virtual ~Keyboard(){}
-    protected:
-    void KeyDown(keycode_t);
-    void KeyUp(keycode_t);
+  protected:
+	void KeyDown(keycode_t);
+	void KeyUp(keycode_t);
 };
-}
+} // namespace io
 
 #endif

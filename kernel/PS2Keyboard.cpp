@@ -38,7 +38,8 @@ namespace {
 class PS2Keyboard : public io::Keyboard {
   public:
 	PS2Keyboard() { flags = 0; }
-	~PS2Keyboard() {}
+	~PS2Keyboard() override {}
+	int ioctl(uint32_t req, void* data) override;
 	void Init();
 
 	// TODO this should maybe be private?
@@ -121,7 +122,6 @@ static void KeyboardIntr() {
 }
 
 void PS2Keyboard::IRQ() {
-	outb(0xe9, 'I');
 	uint8_t scancode = inb(DATA_PORT);
 	if (scancode == 0xE0) {
 		// TODO check if F0 prefix has already been seen. Which would make this
@@ -130,7 +130,7 @@ void PS2Keyboard::IRQ() {
 	} else if (scancode == 0xF0) {
 		this->flags |= STATE_KEY_UP;
 	} else {
-		keycode_t keycode = 0; // TODO maybe needs a type here
+		keycode_t keycode = KEY_NONE;
 		if (flags & STATE_E0) {
 			// TODO implement
 			keycode = KEY_NONE;
@@ -234,6 +234,7 @@ void PS2Keyboard::FlushData() {
 	}
 }
 
+int PS2Keyboard::ioctl(uint32_t req, void* data) { return -1; }
 } // namespace
 
 // TODO this is a total hack
