@@ -31,6 +31,7 @@
 void* __dso_handle;
 extern "C" {
 int __cxa_atexit(void (*destructor)(void*), void* arg, void* dso);
+void __cxa_pure_virtual();
 }
 
 int __cxa_atexit(void (*destructor)(void*), void* arg, void* dso) {
@@ -38,6 +39,11 @@ int __cxa_atexit(void (*destructor)(void*), void* arg, void* dso) {
 	(void)arg;
 	(void)dso;
 	return 0;
+}
+void __cxa_pure_virtual() {
+	// TODO panic
+	while (true) {
+	}
 }
 void __cxa_finalize(void* f) { (void)f; }
 
