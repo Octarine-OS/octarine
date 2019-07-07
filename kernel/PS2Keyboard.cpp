@@ -237,20 +237,6 @@ void PS2Keyboard::FlushData() {
 int PS2Keyboard::ioctl(uint32_t req, void* data) { return -1; }
 } // namespace
 
-// TODO this is a total hack
-io::Keyboard* GetPS2Keyboard() {
-	// PS2Keyboard *kbd
-	/*if(theKeyboard == nullptr){
-	    theKeyboard = new PS2Keyboard();
-	    //TODO assert theKeyboard != null
-	    theKeyboard->Init();
-	}
-	//TODO assert theKeyboard != null
-
-	return theKeyboard;*/
-	return nullptr;
-}
-
 void InitPS2() {
 	e9_str("Calling kbd init\n");
 	theKeyboard.Init();
