@@ -44,7 +44,7 @@ template <typename T, ListHook<T> T::*list_data> class ListIterator {
 	T* elem;
 
   public:
-	ListIterator() { elem = nullptr; }
+	constexpr ListIterator() : elem(nullptr) {}
 
 	ListIterator(T* start) : elem(start) {}
 
@@ -95,10 +95,7 @@ template <typename T, ListHook<T> T::*list_data> class List {
 
   public:
 	typedef ListIterator<T, list_data> Iterator;
-	List() {
-		m_head = nullptr;
-		m_tail = nullptr;
-	}
+	constexpr List() : m_head(nullptr), m_tail(nullptr) {}
 
 	void insert_head(T* elem) {
 		insert(elem);

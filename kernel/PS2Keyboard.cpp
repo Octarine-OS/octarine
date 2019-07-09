@@ -37,7 +37,7 @@ namespace {
 
 class PS2Keyboard : public io::Keyboard {
   public:
-	PS2Keyboard() { flags = 0; }
+	constexpr PS2Keyboard() : flags(0) {}
 	~PS2Keyboard() override {}
 	int ioctl(uint32_t req, void* data) override;
 	void Init();

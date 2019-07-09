@@ -34,7 +34,7 @@ namespace io {
 
 class Keyboard : public Device {
   public:
-	Keyboard() {}
+	constexpr Keyboard() {}
 	virtual ~Keyboard() {}
 
   protected:
