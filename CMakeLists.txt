@@ -8,7 +8,6 @@ enable_language(ASM_NASM)
 include(cmake/config.cmake)
 include(cmake/toolcfg.cmake)
 
-
 set(CMAKE_ASM_NASM_LINKER_PREFERENCE_PROPAGATES 0)
 set(CMAKE_CXX_LINKER_PREFERENCE_PROPAGATES 0)
 set(CMAKE_C_LINKER_PREFERENCE_PROPAGATES 0) 

@@ -25,32 +25,47 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
-include(${CMAKE_CURRENT_LIST_DIR}/libcxx.cmake)
+# download and extract libc++ return include path in out_var
+function(get_libcpp_include out_var)
+	set(tarball "${CMAKE_BINARY_DIR}/dist/libcxx-8.0.1.src.tar.xz")
+	set(source_dir "${CMAKE_BINARY_DIR}/libcxx-8.0.1.src")
 
-macro(set_kernel_flags)
-    set(common_flags
-        --target=i686-elf
-        -march=i686
-        -m32
-        -Wall
-        -fno-stack-protector
-        -ffreestanding
-        -finline-functions
-        -fno-builtin
-        -nostdlib
-        -nostdlibinc
-    )
-    list(JOIN common_flags " " common_flags)
+	set(file_list
+		"libcxx-8.0.1.src/include"
+		"libcxx-8.0.1.src/CREDITS.TXT"
+		"libcxx-8.0.1.src/LICENSE.TXT"
+	)
 
-
-    set(CMAKE_C_FLAGS "${common_flags} ${CMAKE_C_FLAGS}")
-
-    set(_cxx_stdlib_include "")
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        get_libcpp_include(_libcpp_include)
-        foreach(pth IN LISTS _libcpp_include)
-            set(_cxx_stdlib_include "${_cxx_stdlib_include} -cxx-isystem ${pth}")
-        endforeach()
-    endif()
-    set(CMAKE_CXX_FLAGS "${common_flags} -D__ELF__ -D_LIBCPP_HAS_NO_THREADS -fno-exceptions -fno-rtti  ${_cxx_stdlib_include} ${CMAKE_CXX_FLAGS}" )
-endmacro()
+	if(NOT IS_DIRECTORY "${CMAKE_BINARY_DIR}/dist")
+		file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/dist")
+	endif()
+	if(NOT EXISTS "${tarball}")
+		message(STATUS "Downloading libcxx")
+		file(DOWNLOAD
+			"https://github.com/llvm/llvm-project/releases/download/llvmorg-8.0.1/libcxx-8.0.1.src.tar.xz"
+			"${tarball}"
+			SHOW_PROGRESS
+			STATUS dl_status
+		)
+		list(GET dl_status 0 dl_rc)
+		if(NOT "${dl_rc}"  EQUAL 0)
+			file(REMOVE "${tarball}")
+			message(FATAL_ERROR "Failed to download libcxx (${dl_status})")
+		endif()
+	endif()
+	if(NOT EXISTS "${source_dir}/extract.stamp")
+		message(STATUS "Extracting libcxx")
+		execute_process(
+			COMMAND ${CMAKE_COMMAND} -E tar xJf  "${tarball}" ${file_list}
+			WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+			RESULT_VARIABLE extract_rc
+			#ECH
+		)
+		if(NOT "${extract_rc}" EQUAL 0)
+			file(REMOVE_RECURSE "${source_dir}")
+			message(FATAL_ERROR "Failed to extract libcxx (${extract_rc})")
+		endif()
+		file(TOUCH "${source_dir}/extract.stamp")
+	endif()
+	set(${out_var} "${source_dir}/include" PARENT_SCOPE)
+endfunction()
