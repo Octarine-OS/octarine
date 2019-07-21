@@ -53,10 +53,10 @@ template <typename T, ListHook<T> T::*list_data> class ListIterator {
 		return *this;
 	}
 
-	bool operator==(ListIterator<T, list_data>& other) {
+	bool operator==(ListIterator<T, list_data>& other) const {
 		return elem == other.elem;
 	}
-	bool operator!=(ListIterator<T, list_data>& other) {
+	bool operator!=(ListIterator<T, list_data>& other) const {
 		return elem != other.elem;
 	}
 
