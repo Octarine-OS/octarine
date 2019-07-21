@@ -31,33 +31,52 @@
 
 #include "List.hpp"
 #include "machine/Context.hpp"
+#include <klib_new.hpp>
 #include <stddef.h>
-#include <utility.hpp>
+#include <type_traits>
+#include <utility>
+
+template <typename T> class TemplateDebugger {
+	template <typename U> class Helper {
+		int i;
+		char dummy[32];
+		static constexpr size_t sz = sizeof(U);
+	};
+	static_assert(sizeof(Helper<T>) < sizeof(int));
+};
 
 class ThreadStack {
 	void* _base;
 	void* _top;
+	template <typename T>
+	using SlotType = typename std::remove_reference<T>::type;
 
   public:
 	ThreadStack(ThreadStack&) = delete;
 	ThreadStack(ThreadStack&& other);
 
-	template <typename T> void push(const T& value) {
+	template <typename T> SlotType<T>* push(T&& value) {
+		using realT = SlotType<T>;
+		static_assert(std::is_trivially_destructible<realT>::value,
+		              "Pushed value must be trivially destructable");
+		// static_assert(std::is_trivially_copy_constructible<realT>::value);
+		// using T = int;
 		// TODO: should we be doing some checks on T?
-		size_t size = sizeof(T);
-		// Allocate size for object, and round to 8 byte boundry
+		size_t size = sizeof(realT);
+
 		_top = reinterpret_cast<void*>(
-		    (reinterpret_cast<uintptr_t>(_top) - size) & ~7);
-		new (_top) T(value);
+		    (reinterpret_cast<uintptr_t>(_top) - size) & ~4);
+		new (_top) realT(std::forward<realT>(value));
+		return reinterpret_cast<realT*>(_top);
 	}
 
 	void* top() { return _top; }
 
 	static ThreadStack make(size_t size);
+	~ThreadStack();
 
   private:
-	ThreadStack(void* addr);
-	~ThreadStack();
+	constexpr ThreadStack(void* base, void* top) : _base(base), _top(top) {}
 };
 
 struct Thread {
@@ -72,18 +91,32 @@ void TaskSwitchIRQ(arch::Context* state);
 
 namespace Scheduler {
 void Init();
-//Thread* InitThread(void (*entry)());
 
-//private:
-Thread* _InitThread(ThreadStack stack);
-
-template<typename T>
-Thread* InitThread(const T& runnable){
-    // TODO parameterize stack size
-    ThreadStack stack = ThreadStack::make(2048);
-    stack.push(runnable);
-    _InitThread(std::move(stack));
+namespace impl {
+Thread* _InitThread(ThreadStack stack, void (*entry)(void* arg), void* arg);
 }
+
+template <typename T> Thread* InitThread(T&& runnable) {
+	static_assert(std::is_invocable<T>::value,
+	              "argument must be an invocable object");
+	// TODO parameterize stack size
+	using BaseType = std::remove_reference_t<T>;
+	using FuncType = std::remove_pointer_t<std::remove_reference_t<T>>;
+	// TemplateDebugger<typename std::decay<T>::type> x;
+	// static_assert(std::is_function_v<BaseType>);
+	ThreadStack stack = ThreadStack::make(2048);
+	if constexpr (std::is_function_v<FuncType>) {
+		FuncType* funcPtr = runnable;
+		return impl::_InitThread(
+		    std::move(stack),
+		    [](void* arg) { (reinterpret_cast<FuncType*>(arg))(); },
+		    (void*)funcPtr);
+	} else {
+		BaseType* functor = stack.push(std::forward<T>(runnable));
+		return impl::_InitThread(
+		    std::move(stack),
+		    [](void* arg) { (*reinterpret_cast<BaseType*>(arg))(); }, functor);
+	}
 }
 // TODO this is all horibly intolerant of multiprocessor
 

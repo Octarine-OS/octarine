@@ -30,8 +30,6 @@
 
 #include <klib.h>
 
-ThreadStack::ThreadStack(void* addr) : _base(addr), _top(addr) {}
-
 ThreadStack::ThreadStack(ThreadStack&& other)
     : _base(other._base), _top(other._top) {
 	other._base = nullptr;
@@ -47,5 +45,6 @@ ThreadStack::~ThreadStack() {
 ThreadStack ThreadStack::make(size_t size) {
 	// TODO we need some way of reporting an error
 	void* stackMemory = malloc(size);
-	return ThreadStack(stackMemory);
+	void* top = ((uint8_t*)stackMemory) + size - 4;
+	return ThreadStack(stackMemory, top);
 }

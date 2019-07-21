@@ -32,8 +32,11 @@
 #include "portio.h"
 #include "util.hpp"
 #include <klib.h>
+#include <klib_new.hpp>
 #include <stdint.h>
 #include <string.h>
+#include <type_traits>
+//#include <new>
 
 namespace {
 class ThreadSceduler {};
@@ -90,7 +93,14 @@ void TaskSwitchIRQ(arch::Context* state) {
 	return;
 }
 
-Thread* Scheduler::InitThread(void (*entry)()) {
+static void deathFunction() {
+	while (true) {
+		// spin
+	}
+}
+
+Thread* Scheduler::impl::_InitThread(ThreadStack stack,
+                                     void (*entry)(void* arg), void* arg) {
 	Thread* thread = (Thread*)malloc(sizeof(Thread));
 	e9_str("Init Thread ");
 	e9_dump((uint32_t)entry);
@@ -106,11 +116,14 @@ Thread* Scheduler::InitThread(void (*entry)()) {
 	thread->state.es = 0x10;
 	thread->state.ss*/
 
-	// create a stack for our new thread
-	const uint32_t STACK_SIZE = 8 * 1024;
+	// Set up our stack frame
+	// TODO: should be factored out into arch specific code
+	// Push first arg
+	stack.push(arg);
+	// Add a backstop in case thread returns
+	stack.push(&deathFunction);
 
-	// TODO: do we actually need to subtract 4? I need to think about it
-	thread->state.esp = (uint32_t)malloc(STACK_SIZE) + STACK_SIZE - 8;
+	thread->state.esp = (uint32_t)stack.top();
 	e9_str("New stack =");
 	e9_dump(thread->state.esp);
 	outb(0xe9, '\n');
