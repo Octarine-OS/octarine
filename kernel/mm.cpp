@@ -99,6 +99,15 @@ static int getMapping(uint32_t* num, MultibootMap* map) {
 
 static void populateMemMapFromBios() {}
 
+static size_t initialze_pool(void* addr, size_t sz) {
+	uintptr_t old_addr = reinterpret_cast<uintptr_t>(addr);
+	// round to word size
+	constexpr uintptr_t WORD_SZ = sizeof(void*);
+	uintptr_t new_addr = ((old_addr + WORD_SZ - 1) / WORD_SZ) * WORD_SZ;
+	sz -= new_addr - old_addr;
+	return init_memory_pool(sz, reinterpret_cast<void*>(new_addr));
+}
+
 void initMM() {
 	uint32_t index = 0;
 	uint32_t num = 0;
@@ -120,14 +129,14 @@ void initMM() {
 		if (memRegions[i].addr + memRegions[i].length >
 		    0x500000) { // only deal with mem > 5mb
 			if (memRegions[i].addr > 0x500000) {
-				init_memory_pool(memRegions[i].length & 0xFFFFFFFF,
-				                 (void*)(memRegions[i].addr & 0xFFFFFFFF));
+				initialze_pool((void*)(memRegions[i].addr & 0xFFFFFFFF),
+				               memRegions[i].length & 0xFFFFFFFF);
 			} else {
 				void* pool_addr = (void*)0x500000;
 				size_t pool_sz =
 				    0x500000 - (uint32_t)(memRegions[i].addr & 0xFFFFFFFF);
 				pool_sz = memRegions[i].length - pool_sz;
-				init_memory_pool(pool_sz, pool_addr);
+				initialze_pool(pool_addr, pool_sz);
 			}
 			break; // we have a region, we are good to go
 		}
