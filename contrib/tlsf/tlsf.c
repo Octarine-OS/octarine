@@ -113,6 +113,7 @@
 
 #include <tlsf.h>
 //#include <mem.h>
+#include <string.h>
 #if !defined(__GNUC__)
 #ifndef __inline__
 #define __inline__
