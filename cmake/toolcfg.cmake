@@ -54,3 +54,8 @@ macro(set_kernel_flags)
     endif()
     set(CMAKE_CXX_FLAGS "${common_flags} -D__ELF__ -D_LIBCPP_HAS_NO_THREADS -fno-exceptions -fno-rtti  ${_cxx_stdlib_include} ${CMAKE_CXX_FLAGS}" )
 endmacro()
+
+if(CMAKE_GENERATOR STREQUAL "Ninja")
+    set(CMAKE_C_FLAGS "-fcolor-diagnostics ${CMAKE_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-fcolor-diagnostics ${CMAKE_CXX_FLAGS}")
+endif()
