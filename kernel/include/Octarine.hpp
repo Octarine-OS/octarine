@@ -26,23 +26,12 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#ifndef I386_DUMP_HPP
-#define I386_DUMP_HPP
+#ifndef OCTARINE_HPP
+#define OCTARINE_HPP
 
-#include "portio.h"
-#include "util.hpp"
+#include <klib.h>
+#include <machine/Context.hpp>
 
-static inline void e9_str(const char* str) {
-	while (*str != '\0') {
-		outb(0xe9, *str);
-		++str;
-	}
-}
-static inline void e9_dump(uint32_t val) {
-	char buff[9];
-	shittyHexStr32(val, buff);
-	for (int i = 0; i < 8; ++i) {
-		outb(0xe9, buff[i]);
-	}
-}
+KLIB_NORETURN void panic(const char* msg);
+KLIB_NORETURN void panic(arch::Context& ctx, const char* msg = nullptr);
 #endif

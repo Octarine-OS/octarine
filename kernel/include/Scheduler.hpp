@@ -26,23 +26,40 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#ifndef I386_DUMP_HPP
-#define I386_DUMP_HPP
+#ifndef SCHEDULER_HPP
+#define SCHEDULER_HPP
 
-#include "portio.h"
-#include "util.hpp"
+#include "Thread.hpp"
 
-static inline void e9_str(const char* str) {
-	while (*str != '\0') {
-		outb(0xe9, *str);
-		++str;
+namespace Scheduler {
+void Init();
+
+namespace impl {
+Thread* _InitThread(ThreadStack stack, void (*entry)(void* arg), void* arg);
+}
+template <typename T> Thread* InitThread(T&& runnable) {
+	static_assert(std::is_invocable<T>::value,
+	              "argument must be an invocable object");
+	// TODO parameterize stack size
+	using BaseType = std::remove_reference_t<T>;
+	using FuncType = std::remove_pointer_t<std::remove_reference_t<T>>;
+	// TemplateDebugger<typename std::decay<T>::type> x;
+	// static_assert(std::is_function_v<BaseType>);
+	ThreadStack stack = ThreadStack::make(2048);
+	if constexpr (std::is_function_v<FuncType>) {
+		FuncType* funcPtr = runnable;
+		return impl::_InitThread(
+		    std::move(stack),
+		    [](void* arg) { (reinterpret_cast<FuncType*>(arg))(); },
+		    (void*)funcPtr);
+	} else {
+		BaseType* functor = stack.push(std::forward<T>(runnable));
+		return impl::_InitThread(
+		    std::move(stack),
+		    [](void* arg) { (*reinterpret_cast<BaseType*>(arg))(); }, functor);
 	}
 }
-static inline void e9_dump(uint32_t val) {
-	char buff[9];
-	shittyHexStr32(val, buff);
-	for (int i = 0; i < 8; ++i) {
-		outb(0xe9, buff[i]);
-	}
-}
+void TaskSwitchIRQ(arch::Context* state);
+} // namespace Scheduler
+
 #endif

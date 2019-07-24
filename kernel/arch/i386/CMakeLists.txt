@@ -38,6 +38,11 @@ target_include_directories(arch_kernel
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+target_link_libraries(arch_kernel
+    PRIVATE
+        klib
+)
+
 #TODO: this is a hack
 target_include_directories(arch_kernel
     PRIVATE

@@ -32,7 +32,6 @@
 #include <terminal.h>
 
 #include "util.hpp"
-const uint32_t lineSize = 2 * 80;
 static uint16_t* const VRAM = (uint16_t*)0xB8000;
 
 Terminal::Terminal() {

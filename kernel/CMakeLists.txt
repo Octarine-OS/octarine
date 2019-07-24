@@ -27,29 +27,19 @@
 
 set_kernel_flags()
 add_subdirectory(arch)
-#add_library(kernel STATIC EXCLUDE_FROM_ALL main.cpp atkeyboard.cpp driveio.cpp terminal.cpp shell.cpp mm.cpp bioscall.asm cpumode.asm)
-
-#hacks for multiboot
-# TODO re-add shell
-set(COMMON_SRC  bioscall.asm  tlsf.c util.cpp Scheduler.cpp cpumode.asm terminal.cpp  mm.cpp atkeyboard.cpp InterruptManager.cpp InterruptHandler_asm.asm pic.cpp mario.asm)
 
 add_library(kernel STATIC EXCLUDE_FROM_ALL
-	util.cpp
+	main.cpp
+	mm.cpp
+	panic.cpp
 	scheduler.cpp
 	terminal.cpp
-	mm.cpp
+	util.cpp
 	IRQManager.cpp
-	#InterruptManager.cpp
 	Keyboard.cpp
 	PS2Keyboard.cpp
 	Thread.cpp
 )
-if(OCTARINE_MULTIBOOT)
-	target_sources(kernel PRIVATE MBootMain.cpp)
-
-else()
-	target_sources(kernel PRIVATE main.cpp)
-endif()
 
 target_include_directories(kernel
 	PUBLIC

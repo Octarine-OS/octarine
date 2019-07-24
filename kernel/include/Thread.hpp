@@ -36,6 +36,8 @@
 #include <type_traits>
 #include <utility>
 
+#include <e9dump.hpp>
+
 template <typename T> class TemplateDebugger {
 	template <typename U> class Helper {
 		int i;
@@ -63,10 +65,15 @@ class ThreadStack {
 		// using T = int;
 		// TODO: should we be doing some checks on T?
 		size_t size = sizeof(realT);
-
+		void* old_top = _top;
 		_top = reinterpret_cast<void*>(
 		    (reinterpret_cast<uintptr_t>(_top) - size) & ~4);
 		new (_top) realT(std::forward<realT>(value));
+		e9_str("push ");
+		e9_dump((uint32_t)old_top);
+		e9_str("->");
+		e9_dump((uint32_t)_top);
+		e9_str("\n");
 		return reinterpret_cast<realT*>(_top);
 	}
 
@@ -87,45 +94,5 @@ struct Thread {
 };
 
 typedef List<Thread, &Thread::_listHook> ThreadList;
-void TaskSwitchIRQ(arch::Context* state);
-
-namespace Scheduler {
-void Init();
-
-namespace impl {
-Thread* _InitThread(ThreadStack stack, void (*entry)(void* arg), void* arg);
-}
-
-template <typename T> Thread* InitThread(T&& runnable) {
-	static_assert(std::is_invocable<T>::value,
-	              "argument must be an invocable object");
-	// TODO parameterize stack size
-	using BaseType = std::remove_reference_t<T>;
-	using FuncType = std::remove_pointer_t<std::remove_reference_t<T>>;
-	// TemplateDebugger<typename std::decay<T>::type> x;
-	// static_assert(std::is_function_v<BaseType>);
-	ThreadStack stack = ThreadStack::make(2048);
-	if constexpr (std::is_function_v<FuncType>) {
-		FuncType* funcPtr = runnable;
-		return impl::_InitThread(
-		    std::move(stack),
-		    [](void* arg) { (reinterpret_cast<FuncType*>(arg))(); },
-		    (void*)funcPtr);
-	} else {
-		BaseType* functor = stack.push(std::forward<T>(runnable));
-		return impl::_InitThread(
-		    std::move(stack),
-		    [](void* arg) { (*reinterpret_cast<BaseType*>(arg))(); }, functor);
-	}
-}
-// TODO this is all horibly intolerant of multiprocessor
-
-void SwitchToThread(Thread* t);
-
-Thread* GetCurrentThread();
-Thread* GetNextThread();
-
-void HandleTaskSwitch();
-} // namespace Scheduler
 
 #endif

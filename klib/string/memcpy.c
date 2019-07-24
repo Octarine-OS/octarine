@@ -39,3 +39,8 @@ void* memcpy(void* dest, const void* src, size_t sz) {
 
 	return dest;
 }
+
+// For now, our memcpy implementation fits the requirements of memcpy
+void* memmove(void* dest, const void* src, size_t sz) {
+	return memcpy(dest, src, sz);
+}

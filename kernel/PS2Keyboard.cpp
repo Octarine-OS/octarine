@@ -86,12 +86,14 @@ enabled) 5	Second PS/2 port clock (1 = disabled, 0 = enabled, only if 2 PS/2
 ports supported) 6	First PS/2 port translation (1 = enabled, 0 = disabled) 7
 Must be zero*/
 // Config byte stuff
-const uint8_t CONFIG_ENABLE_INTR_PORT_1 = 1 << 0;
-const uint8_t CONFIG_ENABLE_INTR_PORT_2 = 1 << 1;
-const uint8_t CONFIG_SYSTEMFLAG = 1 << 2;
-const uint8_t CONFIG_PORT_1_CLOCK = 1 << 4;
-const uint8_t CONFIG_PORT_2_CLOCK = 1 << 5;
-const uint8_t CONFIG_PORT_XLATE = 1 << 6;
+enum  PS2_Config: uint8_t{
+	CONFIG_ENABLE_INTR_PORT_1 = 1 << 0,
+	CONFIG_ENABLE_INTR_PORT_2 = 1 << 1,
+	CONFIG_SYSTEMFLAG = 1 << 2,
+	CONFIG_PORT_1_CLOCK = 1 << 4,
+	CONFIG_PORT_2_CLOCK = 1 << 5,
+	CONFIG_PORT_XLATE = 1 << 6
+};
 
 static inline void WriteData(uint8_t data) {
 	while (inb(STATUS_PORT) & (1 << 1))

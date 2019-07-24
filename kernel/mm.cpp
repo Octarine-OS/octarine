@@ -30,6 +30,7 @@
 #include "portio.h"
 #include "util.hpp"
 #include <bioscall.h>
+#include <octarine.hpp>
 #include <stdint.h>
 #include <tlsf.h>
 
@@ -39,6 +40,7 @@ MultibootMap memRegions[MAX_MAPPINGS] __attribute__((section(".lowdata")));
 // incremental compacting of memory regions
 // index = the index of last entry, on return = new index of last entry
 // TODO: still not 100% optimized
+[[maybe_unused]]
 static void compactIncr(MultibootMap* regions, uint32_t* last) {
 	MultibootMap* region = &regions[*last]; // the region we are trying to merge
 	uint32_t limit = *last;
@@ -97,8 +99,6 @@ static int getMapping(uint32_t* num, MultibootMap* map) {
 	return -1;
 }
 
-static void populateMemMapFromBios() {}
-
 static size_t initialze_pool(void* addr, size_t sz) {
 	uintptr_t old_addr = reinterpret_cast<uintptr_t>(addr);
 	// round to word size
@@ -129,14 +129,25 @@ void initMM() {
 		if (memRegions[i].addr + memRegions[i].length >
 		    0x500000) { // only deal with mem > 5mb
 			if (memRegions[i].addr > 0x500000) {
-				initialze_pool((void*)(memRegions[i].addr & 0xFFFFFFFF),
-				               memRegions[i].length & 0xFFFFFFFF);
+
+				constexpr uint32_t max_length = 3 * 1024 * 1024;
+				uint32_t length = memRegions[i].length & 0xFFFFFFFF;
+				if (length > max_length)
+					length = max_length;
+
+				if (initialize_pool(
+				        length, (void*)(memRegions[i].addr & 0xFFFFFFFF))) {
+					panic("Failed to initialize memory pool");
+				}
 			} else {
+
 				void* pool_addr = (void*)0x500000;
 				size_t pool_sz =
 				    0x500000 - (uint32_t)(memRegions[i].addr & 0xFFFFFFFF);
 				pool_sz = memRegions[i].length - pool_sz;
-				initialze_pool(pool_addr, pool_sz);
+				if (initialize_pool(pool_sz, pool_addr)) {
+					panic("Failed to initialize memory pool");
+				}
 			}
 			break; // we have a region, we are good to go
 		}
