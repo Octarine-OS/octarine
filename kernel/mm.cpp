@@ -99,7 +99,7 @@ static int getMapping(uint32_t* num, MultibootMap* map) {
 	return -1;
 }
 
-static size_t initialze_pool(void* addr, size_t sz) {
+static size_t initialize_pool(void* addr, size_t sz) {
 	uintptr_t old_addr = reinterpret_cast<uintptr_t>(addr);
 	// round to word size
 	constexpr uintptr_t WORD_SZ = sizeof(void*);
@@ -136,7 +136,7 @@ void initMM() {
 					length = max_length;
 
 				if (initialize_pool(
-				        length, (void*)(memRegions[i].addr & 0xFFFFFFFF))) {
+				        (void*)(memRegions[i].addr & 0xFFFFFFFF), length)) {
 					panic("Failed to initialize memory pool");
 				}
 			} else {
@@ -145,7 +145,7 @@ void initMM() {
 				size_t pool_sz =
 				    0x500000 - (uint32_t)(memRegions[i].addr & 0xFFFFFFFF);
 				pool_sz = memRegions[i].length - pool_sz;
-				if (initialize_pool(pool_sz, pool_addr)) {
+				if (initialize_pool(pool_addr,pool_sz)) {
 					panic("Failed to initialize memory pool");
 				}
 			}
