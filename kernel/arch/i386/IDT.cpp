@@ -104,7 +104,6 @@ static const char* exceptionNames[] = {
 
 void i386::IDT::Interrupt(arch::Context& ctx) {
 	if (ctx.intNum <= 0x1F) {
-		ExceptionPanic(ctx);
 		panic(ctx, exceptionNames[ctx.intNum]);
 	}
 	if (ctx.intNum >= 256) {
