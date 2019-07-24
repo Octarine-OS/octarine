@@ -107,14 +107,7 @@ void i386::IDT::Interrupt(arch::Context& ctx) {
 		panic(ctx, exceptionNames[ctx.intNum]);
 	}
 	if (ctx.intNum >= 256) {
-		// TODO: shuldnt really be printing from an interrupt handler
-		globalTerm->printString("ERROR: bad interrupt number: ");
-		char buff[9];
-		shittyHexStr32(ctx.intNum, buff);
-		buff[8] = 0;
-		globalTerm->printString(buff);
-		while (true) {
-		};
+		panic("Invalid interrupt");
 	}
 	IRQManager::DoIRQ(ctx.intNum - 0x20);
 }
