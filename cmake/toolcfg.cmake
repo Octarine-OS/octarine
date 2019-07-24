@@ -42,6 +42,14 @@ macro(set_kernel_flags)
     )
     list(JOIN common_flags " " common_flags)
 
+    set(cpp_flags
+        -D__ELF__
+        -D_LIBCPP_HAS_NO_THREADS
+        -fno-c++-static-destructors
+        -fno-exceptions
+        -fno-rtti
+    )
+    list(JOIN cpp_flags " " cpp_flags)
 
     set(CMAKE_C_FLAGS "${common_flags} ${CMAKE_C_FLAGS}")
 
@@ -52,7 +60,7 @@ macro(set_kernel_flags)
             set(_cxx_stdlib_include "${_cxx_stdlib_include} -cxx-isystem ${pth}")
         endforeach()
     endif()
-    set(CMAKE_CXX_FLAGS "${common_flags} -D__ELF__ -D_LIBCPP_HAS_NO_THREADS -fno-c++-static-destructors -fno-exceptions -fno-rtti  ${_cxx_stdlib_include} ${CMAKE_CXX_FLAGS}" )
+    set(CMAKE_CXX_FLAGS "${common_flags} ${cpp_flags} ${_cxx_stdlib_include} ${CMAKE_CXX_FLAGS}" )
 endmacro()
 
 if(CMAKE_GENERATOR STREQUAL "Ninja")
