@@ -36,6 +36,7 @@
 #include "terminal.h"
 
 #include "Thread.hpp"
+#include "Scheduler.hpp"
 
 // TODO this is a hack
 #include "arch/i386/IDT.hpp"
