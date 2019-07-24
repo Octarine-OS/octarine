@@ -30,6 +30,7 @@
 #include "portio.h"
 #include "util.hpp"
 #include <bioscall.h>
+#include <octarine.hpp>
 #include <stdint.h>
 #include <tlsf.h>
 
@@ -120,14 +121,25 @@ void initMM() {
 		if (memRegions[i].addr + memRegions[i].length >
 		    0x500000) { // only deal with mem > 5mb
 			if (memRegions[i].addr > 0x500000) {
-				init_memory_pool(memRegions[i].length & 0xFFFFFFFF,
-				                 (void*)(memRegions[i].addr & 0xFFFFFFFF));
+
+				constexpr uint32_t max_length = 3 * 1024 * 1024;
+				uint32_t length = memRegions[i].length & 0xFFFFFFFF;
+				if (length > max_length)
+					length = max_length;
+
+				if (init_memory_pool(
+				        length, (void*)(memRegions[i].addr & 0xFFFFFFFF))) {
+					panic("Failed to initialize memory pool");
+				}
 			} else {
+
 				void* pool_addr = (void*)0x500000;
 				size_t pool_sz =
 				    0x500000 - (uint32_t)(memRegions[i].addr & 0xFFFFFFFF);
 				pool_sz = memRegions[i].length - pool_sz;
-				init_memory_pool(pool_sz, pool_addr);
+				if (init_memory_pool(pool_sz, pool_addr)) {
+					panic("Failed to initialize memory pool");
+				}
 			}
 			break; // we have a region, we are good to go
 		}
