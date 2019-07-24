@@ -29,15 +29,17 @@
 #ifndef PORTIO_H
 #define PORTIO_H
 
+#include <klib.h>
 #include <stdint.h>
 
 
- __attribute__((always_inline)) static inline void outb(uint16_t port, uint8_t val) {
+
+KLIB_FORCEINLINE static inline void outb(uint16_t port, uint8_t val) {
     asm volatile( "outb %0, %w1"
                   : : "a"(val), "Nd"(port) );
 }
 
-__attribute__((always_inline)) static inline uint8_t inb(uint16_t port) {
+KLIB_FORCEINLINE static inline uint8_t inb(uint16_t port) {
     unsigned char ret;
     asm volatile( "inb %w1, %0"
                   : "=a"(ret) : "Nd"(port) );

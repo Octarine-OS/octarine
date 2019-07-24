@@ -44,6 +44,13 @@ static inline void* realloc(void* ptr, size_t size) {
 }
 END_DEF
 
-#define KLIB_NORETURN [[noreturn]]
+#if __cplusplus >= 201703L
+# define KLIB_NORETURN [[noreturn]]
+# define KLIB_UNUSED [[unused]]
+#else
+#endif
+
+#define KLIB_FORCEINLINE __attribute__((always_inline))
+
 
 #endif
