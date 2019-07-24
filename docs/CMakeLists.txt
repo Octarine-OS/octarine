@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (c) 2018, Devin Nakamura
+# Copyright (c) 2019, Devin Nakamura
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -25,11 +25,21 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
-# Various configuration options
+find_package(Doxygen)
 
-option(OCTARINE_MULTIBOOT "Build multiboot kerenel" ON)
-option(OCTARINE_BUILD_DOCS "Build documentation" ON)
+if(NOT DOXYGEN_FOUND)
+    message(FATAL_ERROR "Doxygen is required to build the documentation.")
+endif()
 
-set(OCTARINE_TARGET_ARCH i386 CACHE STRING "Target architecture")
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in
+    ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+    @ONLY
+)
 
-set(OCTARINE_WARNINGS_AS_ERRORS ON CACHE BOOL "Treat compiler warnings as errors")
+add_custom_target(doxygen ALL
+    COMMAND ${DOXYGEN_EXECUTABLE}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Generating Doxygen documentation"
+    VERBATIM
+)

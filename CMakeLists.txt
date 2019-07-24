@@ -59,3 +59,7 @@ add_subdirectory(contrib)
 
 add_subdirectory(klib)
 add_subdirectory(kernel)
+
+if(OCTARINE_BUILD_DOCS)
+    add_subdirectory(docs)
+endif()
