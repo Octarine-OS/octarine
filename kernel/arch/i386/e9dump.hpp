@@ -32,13 +32,13 @@
 #include "portio.h"
 #include "util.hpp"
 
-static void e9_str(const char* str) {
+static inline void e9_str(const char* str) {
 	while (*str != '\0') {
 		outb(0xe9, *str);
 		++str;
 	}
 }
-static void e9_dump(uint32_t val) {
+static inline void e9_dump(uint32_t val) {
 	char buff[9];
 	shittyHexStr32(val, buff);
 	for (int i = 0; i < 8; ++i) {
