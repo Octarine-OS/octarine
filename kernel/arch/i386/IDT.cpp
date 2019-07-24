@@ -30,6 +30,8 @@
 #include "IRQManager.hpp"
 #include "terminal.h"
 #include "util.hpp"
+#include <Octarine.hpp>
+
 const uintptr_t KERNEL_VIRTUAL_BASE = 0xC0000000;
 
 extern "C" void* isr_table[];
@@ -100,58 +102,13 @@ static const char* exceptionNames[] = {
     "Reserved (0x1F)",
 };
 
-static void dumpRegister(int line, int col, const char* name, uint32_t val) {
-	Terminal& term = *globalTerm;
-	char buff[5];
-	buff[4] = 0;
-	const int colNum = 1 + (17 * col);
-
-	term.setCursor(colNum, line);
-
-	term.printString(name);
-	term.printString(": ");
-	shittyHexStr((val >> 16) & 0xFFFF, buff);
-	term.printString(buff);
-	term.printChar(' ');
-	shittyHexStr(val & 0xFFFF, buff);
-	term.printString(buff);
-}
-
-static void ExceptionPanic(arch::Context& ctx) {
-	Terminal& term = *globalTerm;
-
-	term.setAttr(0x47);
-	term.clearScreen();
-	term.setCursor(1, 0);
-	term.printString("KERNEL PANIC, UNHANDLED EXCEPTION");
-
-	if (ctx.intNum <= 0x1f) {
-		term.setCursor(1, 1);
-		term.printString(exceptionNames[ctx.intNum]);
-	}
-
-	dumpRegister(10, 0, "EAX", ctx.eax);
-	dumpRegister(10, 1, "ECX", ctx.ecx);
-
-	dumpRegister(11, 0, "EDX", ctx.edx);
-	dumpRegister(11, 1, "EBX", ctx.ebx);
-
-	dumpRegister(12, 0, "ESP", ctx.esp);
-	dumpRegister(12, 1, "EBP", ctx.ebp);
-
-	dumpRegister(13, 0, "ESI", ctx.esi);
-	dumpRegister(13, 1, "EDI", ctx.edi);
-
-	dumpRegister(14, 0, "EIP", ctx.eip);
-	while (1) {
-	}
-}
-
 void i386::IDT::Interrupt(arch::Context& ctx) {
 	if (ctx.intNum <= 0x1F) {
 		ExceptionPanic(ctx);
+		panic(ctx, exceptionNames[ctx.intNum]);
 	}
 	if (ctx.intNum >= 256) {
+		// TODO: shuldnt really be printing from an interrupt handler
 		globalTerm->printString("ERROR: bad interrupt number: ");
 		char buff[9];
 		shittyHexStr32(ctx.intNum, buff);

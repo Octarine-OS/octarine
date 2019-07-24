@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Devin Nakamura
+ * Copyright (c) 2019, Devin Nakamura
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,24 +26,12 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#ifndef KLIB_H
-#define KLIB_H
+#ifndef OCTARINE_HPP
+#define OCTARINE_HPP
 
-#include <stddef.h>
-#include <stdint.h>
-#include <sys/cdefs.h>
-BEGIN_DEF
+#include <klib.h>
+#include <machine/Context.hpp>
 
-void* tlsf_malloc(size_t);
-void tlsf_free(void*);
-void* tlsf_realloc(void*, size_t);
-static inline void* malloc(size_t size) { return tlsf_malloc(size); }
-static inline void free(void* ptr) { tlsf_free(ptr); }
-static inline void* realloc(void* ptr, size_t size) {
-	return tlsf_realloc(ptr, size);
-}
-END_DEF
-
-#define KLIB_NORETURN [[noreturn]]
-
+KLIB_NORETURN void panic(const char* msg);
+KLIB_NORETURN void panic(arch::Context& ctx, const char* msg = nullptr);
 #endif

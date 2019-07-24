@@ -34,12 +34,12 @@ add_subdirectory(arch)
 set(COMMON_SRC  bioscall.asm  tlsf.c util.cpp Scheduler.cpp cpumode.asm terminal.cpp  mm.cpp atkeyboard.cpp InterruptManager.cpp InterruptHandler_asm.asm pic.cpp mario.asm)
 
 add_library(kernel STATIC EXCLUDE_FROM_ALL
-	util.cpp
+	panic.cpp
 	scheduler.cpp
 	terminal.cpp
+	util.cpp
 	mm.cpp
 	IRQManager.cpp
-	#InterruptManager.cpp
 	Keyboard.cpp
 	PS2Keyboard.cpp
 	Thread.cpp
