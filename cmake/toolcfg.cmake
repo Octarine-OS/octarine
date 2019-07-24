@@ -39,6 +39,7 @@ macro(set_kernel_flags)
         -fno-builtin
         -nostdlib
         -nostdlibinc
+        -g
     )
     list(JOIN common_flags " " common_flags)
 
