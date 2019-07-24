@@ -37,7 +37,7 @@ configure_file(
     @ONLY
 )
 
-add_custom_target(doxygen ALL
+add_custom_target(doxygen
     COMMAND ${DOXYGEN_EXECUTABLE}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating Doxygen documentation"
