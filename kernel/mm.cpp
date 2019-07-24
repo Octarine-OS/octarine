@@ -40,6 +40,7 @@ MultibootMap memRegions[MAX_MAPPINGS] __attribute__((section(".lowdata")));
 // incremental compacting of memory regions
 // index = the index of last entry, on return = new index of last entry
 // TODO: still not 100% optimized
+[[maybe_unused]]
 static void compactIncr(MultibootMap* regions, uint32_t* last) {
 	MultibootMap* region = &regions[*last]; // the region we are trying to merge
 	uint32_t limit = *last;
@@ -97,8 +98,6 @@ static int getMapping(uint32_t* num, MultibootMap* map) {
 	}
 	return -1;
 }
-
-static void populateMemMapFromBios() {}
 
 void initMM() {
 	uint32_t index = 0;
