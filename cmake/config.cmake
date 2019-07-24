@@ -30,3 +30,5 @@
 option(OCTARINE_MULTIBOOT "Build multiboot kerenel" ON)
 
 set(OCTARINE_TARGET_ARCH i386 CACHE STRING "Target architecture")
+
+set(OCTARINE_WARNINGS_AS_ERRORS ON CACHE BOOL "Treat compiler warnings as errors")

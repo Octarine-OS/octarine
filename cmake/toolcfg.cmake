@@ -59,3 +59,8 @@ if(CMAKE_GENERATOR STREQUAL "Ninja")
     set(CMAKE_C_FLAGS "-fcolor-diagnostics ${CMAKE_C_FLAGS}")
     set(CMAKE_CXX_FLAGS "-fcolor-diagnostics ${CMAKE_CXX_FLAGS}")
 endif()
+
+if(OCTARINE_WARNINGS_AS_ERRORS)
+    set(CMAKE_C_FLAGS "-Werror ${CMAKE_C_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-Werror ${CMAKE_CXX_FLAGS}")
+endif()
