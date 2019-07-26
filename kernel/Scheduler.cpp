@@ -102,14 +102,6 @@ static void deathFunction() {
 Thread* Scheduler::impl::_InitThread(ThreadStack stack,
                                      void (*entry)(void* arg), void* arg) {
 	Thread* thread = (Thread*)malloc(sizeof(Thread));
-	e9_str("malloc_test ");
-	e9_dump((uint32_t)malloc(10));
-	e9_str("\n");
-	e9_str("Init Thread ");
-	e9_dump((uint32_t)thread);
-	e9_str(" ");
-	e9_dump((uint32_t)entry);
-	outb(0xe9, '\n');
 	memset(thread, 0, sizeof(Thread));
 	thread->id = 0xDEADBEEf;
 	thread->state.eip = (uint32_t)entry;
@@ -127,13 +119,7 @@ Thread* Scheduler::impl::_InitThread(ThreadStack stack,
 	stack.push(arg);
 	// Add a backstop in case thread returns
 	stack.push(&deathFunction);
-	e9_str("dbg stakc ");
-	e9_dump((uint32_t)stack.top());
-	e9_str("\n");
 	thread->state.esp = (uint32_t)stack.top();
-	e9_str("New stack =");
-	e9_dump(thread->state.esp + 1);
-	outb(0xe9, '\n');
 	thread->state.eflags = 0x200;
 	all_threads.insert_tail(thread);
 	// TODO this is just nasty
