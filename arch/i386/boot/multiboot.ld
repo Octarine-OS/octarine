@@ -68,7 +68,7 @@ SECTIONS
         *(.bss)
         *(.gnu.linkonce.b*)
     } :bss
-    ebss = ABSOLUTE( LOADADDR(.bss));
+    ebss = ABSOLUTE( LOADADDR(.bss) + SIZEOF(.bss));
 
     /DISCARD/ :
     {
