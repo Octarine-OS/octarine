@@ -55,7 +55,7 @@ void EIPHack(arch::Context* state) {
 
 	*((uint32_t*)((uint8_t*)state->esp + 16)) = state->eflags;
 }
-bool firstSwitch = false;
+bool firstSwitch = true;
 // This gets installed as our interrupt handler
 void Scheduler::TaskSwitchIRQ(arch::Context* state) {
 
@@ -68,10 +68,10 @@ void Scheduler::TaskSwitchIRQ(arch::Context* state) {
 	outb(0xe9, '\n');
 
 	// Save state of current thread
-	if (firstSwitch)
+	if (!firstSwitch)
 		currentThread->state = *state;
 	else
-		firstSwitch = true;
+		firstSwitch = false;
 
 	// Get the next thread to be run
 	// THis is boring because it is just round robin scheduling
