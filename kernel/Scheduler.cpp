@@ -33,7 +33,7 @@
 #include "util.hpp"
 #include <klib.h>
 #include <klib_new.hpp>
-#include <scheduler.hpp>
+#include <Scheduler.hpp>
 #include <stdint.h>
 #include <string.h>
 #include <type_traits>
