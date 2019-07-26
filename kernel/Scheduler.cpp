@@ -57,7 +57,7 @@ void EIPHack(arch::Context* state) {
 }
 bool firstSwitch = false;
 // This gets installed as our interrupt handler
-void TaskSwitchIRQ(arch::Context* state) {
+void Scheduler::TaskSwitchIRQ(arch::Context* state) {
 
 	uint32_t old_eip = state->eip;
 
