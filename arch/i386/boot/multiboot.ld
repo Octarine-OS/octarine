@@ -22,7 +22,7 @@ SECTIONS
         ASSERT((. > 1), "Malformed multiboot header")
         *(.text);
         *(.gnu.linkonce.t*);
-        . = ALIGN(0x1000);
+        /*. = ALIGN(0x1000);*/
     } :text
     mboot_phys_entry = ABSOLUTE(_multibootEntry) - KERNEL_VIRTUAL_BASE;
     phys_header_addr = LOADADDR(.text);
@@ -42,7 +42,7 @@ SECTIONS
 
     } :data
 
-    .data ALIGN(0x1000) :
+    .data /*ALIGN(0x1000)*/ :
     {
         *(.data)
         *(.gnu.linkonce.d*)
@@ -61,7 +61,7 @@ SECTIONS
 
     end_load = LOADADDR(.lowmem) + SIZEOF(.lowmem);
 
-    .bss  ADDR(.data) + SIZEOF(.data): AT(LOADADDR(.lowmem) + SIZEOF(.lowmem))
+    .bss  _end_trampoline: AT(LOADADDR(.lowmem) + SIZEOF(.lowmem))
     {
         sbss = .;
         *(COMMON)
