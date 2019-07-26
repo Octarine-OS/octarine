@@ -26,7 +26,7 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#include "portio.h"
+#include "arch/i386/portio.h"
 #include <io/Keyboard.hpp>
 using namespace io;
 

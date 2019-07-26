@@ -30,7 +30,7 @@
 #include "kernel/bioscall.h"
 #include "kernel/registers.h"
 
-#include <portio.h>
+#include "arch/i386/portio.h"
 
 Drive::Drive(uint8_t drivenum) { num = drivenum; }
 

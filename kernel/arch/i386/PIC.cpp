@@ -26,8 +26,8 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#include <PIC.hpp>
-#include <portio.h>
+#include "PIC.hpp"
+#include "portio.h"
 
 namespace {
 constexpr uint16_t PIC1_COMMAND = 0x20;
