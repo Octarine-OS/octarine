@@ -31,9 +31,9 @@
 #include "e9dump.hpp"
 #include "portio.h"
 #include "util.hpp"
+#include <Scheduler.hpp>
 #include <klib.h>
 #include <klib_new.hpp>
-#include <Scheduler.hpp>
 #include <stdint.h>
 #include <string.h>
 #include <type_traits>
