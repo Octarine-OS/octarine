@@ -34,4 +34,12 @@
 
 KLIB_NORETURN void panic(const char* msg);
 KLIB_NORETURN void panic(arch::Context& ctx, const char* msg = nullptr);
+
+#define STRINGIFY(x) #x
+#define KASSERT(cond)                                                          \
+	if (!(cond)) {                                                             \
+		panic("Failed assertion at " __FILE__                                  \
+		      ":" STRINGIFY(__LINE__) " " #cond);                              \
+	}
+
 #endif
