@@ -1,0 +1,11 @@
+image: ubuntu1804
+
+install:
+- sh: sudo apt-get update
+- sh: sudo apt-get install -y clang-8 lld-8 nasm
+
+build_script:
+- mkdir build && cd build
+- export PATH=/usr/lib/llvm-8/bin:$PATH
+- cmake -DCMAKE_C_COMPILER=clang-8 -DCMAKE_CXX_COMPILER=clang++-8 -DOCTARINE_BUILD_DOCS=Off ..
+- make -j2
