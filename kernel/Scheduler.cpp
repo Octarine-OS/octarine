@@ -121,8 +121,7 @@ Thread* Scheduler::impl::_InitThread(ThreadStack stack,
 	stack.push(&deathFunction);
 
 	// Add dummy args to make it look like an interrupt frame
-	stack.push<uint32_t>(0);
-	stack.push<uint32_t>(0);
+	stack.push(thread->state);
 
 	thread->state.esp = (uint32_t)stack.top();
 	thread->state.eflags = 0x200;
@@ -131,6 +130,8 @@ Thread* Scheduler::impl::_InitThread(ThreadStack stack,
 	if (*currentThread == NULL) {
 		currentThread = all_threads.head();
 	}
+
+	KASSERT(*currentThread != nullptr);
 	return thread;
 }
 
