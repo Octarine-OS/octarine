@@ -26,6 +26,11 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
+/**
+ * /file
+ * Kernel panic handling code
+ */
+
 #include "terminal.h"
 #include "util.hpp"
 #include <Octarine.hpp>

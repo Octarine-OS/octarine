@@ -35,8 +35,8 @@
 #include "portio.h"
 #include "terminal.h"
 
-#include "Thread.hpp"
 #include "Scheduler.hpp"
+#include "Thread.hpp"
 
 // TODO this is a hack
 #include "arch/i386/IDT.hpp"

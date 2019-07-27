@@ -55,7 +55,13 @@ void EIPHack(arch::Context* state) {
 
 	*((uint32_t*)((uint8_t*)state->esp + 16)) = state->eflags;
 }
+
+/**
+ * Indicates that this is our first task switch
+ * /todo This should be factored out
+ */
 bool firstSwitch = true;
+
 // This gets installed as our interrupt handler
 void Scheduler::TaskSwitchIRQ(arch::Context* state) {
 

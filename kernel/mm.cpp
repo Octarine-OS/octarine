@@ -26,6 +26,11 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
+/**
+ * /file
+ * Memory management routines
+ */
+
 #include "mm.h"
 #include "portio.h"
 #include "util.hpp"
@@ -40,8 +45,8 @@ MultibootMap memRegions[MAX_MAPPINGS] __attribute__((section(".lowdata")));
 // incremental compacting of memory regions
 // index = the index of last entry, on return = new index of last entry
 // TODO: still not 100% optimized
-[[maybe_unused]]
-static void compactIncr(MultibootMap* regions, uint32_t* last) {
+[[maybe_unused]] static void compactIncr(MultibootMap* regions,
+                                         uint32_t* last) {
 	MultibootMap* region = &regions[*last]; // the region we are trying to merge
 	uint32_t limit = *last;
 	for (uint32_t i = 0; i < limit; i++) {
