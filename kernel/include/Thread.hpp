@@ -67,7 +67,7 @@ class ThreadStack {
 		size_t size = sizeof(realT);
 		void* old_top = _top;
 		_top = reinterpret_cast<void*>(
-		    (reinterpret_cast<uintptr_t>(_top) - size) & ~4);
+		    (reinterpret_cast<uintptr_t>(_top) - size) & ~3);
 		new (_top) realT(std::forward<realT>(value));
 		e9_str("push ");
 		e9_dump((uint32_t)old_top);
