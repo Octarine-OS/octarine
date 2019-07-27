@@ -158,21 +158,16 @@ void PS2Keyboard::IRQ() {
 }
 
 void PS2Keyboard::Init() {
-	e9_str("PS2 init\n");
 	// Disable both devices
-	e9_str("Write cmd\n");
 	WriteCmd(0xAD);
-	e9_str("Write cmd\n");
 	WriteCmd(0xA7);
 
 	// flush the buffer
 	FlushData();
-	e9_str("Devices Disabled\n");
 
 	// Set configuration
 	WriteCmd(0x20);
 	uint8_t config = ReadData();
-	e9_str("config read\n");
 	config &= ~(CONFIG_ENABLE_INTR_PORT_1 | CONFIG_ENABLE_INTR_PORT_2 |
 	            CONFIG_PORT_XLATE);
 	// config |= CONFIG_ENABLE_INTR_PORT_1;
@@ -184,12 +179,10 @@ void PS2Keyboard::Init() {
 
 	WriteCmd(0x60);
 	WriteData(config);
-	e9_str("Config updated\n");
 
 	// enable the first port
 	WriteCmd(0xAE);
 
-	e9_str("sendigRest cmd\n");
 	// Send reset command
 	FlushData();
 	WriteData(0xff);
@@ -240,6 +233,5 @@ int PS2Keyboard::ioctl(uint32_t req, void* data) { return -1; }
 } // namespace
 
 void InitPS2() {
-	e9_str("Calling kbd init\n");
 	theKeyboard.Init();
 }

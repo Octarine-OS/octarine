@@ -31,6 +31,7 @@
 #include "e9dump.hpp"
 #include "portio.h"
 #include "util.hpp"
+#include <Octarine.hpp>
 #include <Scheduler.hpp>
 #include <klib.h>
 #include <klib_new.hpp>
@@ -48,11 +49,9 @@ ThreadList::Iterator currentThread;
 typedef uint32_t size_t;
 
 void EIPHack(arch::Context* state) {
-
 	// SUper hack to save the cs:EIP values when we task switch
 	*((uint32_t*)((uint8_t*)state->esp + 8)) = state->eip;
 	*((uint32_t*)((uint8_t*)state->esp + 12)) = state->cs;
-
 	*((uint32_t*)((uint8_t*)state->esp + 16)) = state->eflags;
 }
 
@@ -67,12 +66,6 @@ void Scheduler::TaskSwitchIRQ(arch::Context* state) {
 
 	uint32_t old_eip = state->eip;
 
-	e9_str("\n IRQ\nESP=");
-	e9_dump(state->esp);
-	outb(0xe9, '\n');
-	e9_dump(currentThread->id);
-	outb(0xe9, '\n');
-
 	// Save state of current thread
 	if (!firstSwitch)
 		currentThread->state = *state;
@@ -80,10 +73,8 @@ void Scheduler::TaskSwitchIRQ(arch::Context* state) {
 		firstSwitch = false;
 
 	// Get the next thread to be run
-	// THis is boring because it is just round robin scheduling
+	// This is boring because it is just round robin scheduling
 	++currentThread;
-	e9_dump(currentThread->id);
-	outb(0xe9, '\n');
 
 	// Write the new threads state into the interrupt state
 	// This means we shout iret to it when we return from the interrupt handler
@@ -91,10 +82,6 @@ void Scheduler::TaskSwitchIRQ(arch::Context* state) {
 
 	EIPHack(state);
 
-	e9_dump(old_eip);
-	e9_str("->");
-	e9_dump(state->eip);
-	outb(0xe9, '\n');
 	PIC::sendEOI(0x0);
 	return;
 }
