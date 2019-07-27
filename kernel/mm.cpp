@@ -140,8 +140,8 @@ void initMM() {
 				if (length > max_length)
 					length = max_length;
 
-				if (initialize_pool(
-				        (void*)(memRegions[i].addr & 0xFFFFFFFF), length)) {
+				if (initialize_pool((void*)(memRegions[i].addr & 0xFFFFFFFF),
+				                    length) == -1) {
 					panic("Failed to initialize memory pool");
 				}
 			} else {
@@ -150,7 +150,7 @@ void initMM() {
 				size_t pool_sz =
 				    0x500000 - (uint32_t)(memRegions[i].addr & 0xFFFFFFFF);
 				pool_sz = memRegions[i].length - pool_sz;
-				if (initialize_pool(pool_addr,pool_sz)) {
+				if (initialize_pool(pool_addr, pool_sz) == -1) {
 					panic("Failed to initialize memory pool");
 				}
 			}
