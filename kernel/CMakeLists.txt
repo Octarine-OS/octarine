@@ -32,7 +32,7 @@ add_library(kernel STATIC EXCLUDE_FROM_ALL
 	main.cpp
 	mm.cpp
 	panic.cpp
-	scheduler.cpp
+	Scheduler.cpp
 	terminal.cpp
 	util.cpp
 	IRQManager.cpp
