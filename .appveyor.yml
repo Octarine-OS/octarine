@@ -9,3 +9,7 @@ build_script:
 - export PATH=/usr/lib/llvm-8/bin:$PATH
 - cmake -DCMAKE_C_COMPILER=clang-8 -DCMAKE_CXX_COMPILER=clang++-8 -DOCTARINE_BUILD_DOCS=Off ..
 - make -j2
+
+artifacts:
+  - path: build/stage2.bin
+    name: kernel
