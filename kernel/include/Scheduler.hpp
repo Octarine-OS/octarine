@@ -49,14 +49,13 @@ template <typename T> Thread* InitThread(T&& runnable) {
 	if constexpr (std::is_function_v<FuncType>) {
 		FuncType* funcPtr = runnable;
 		return impl::_InitThread(
-		    std::move(stack),
-		    [](void* arg) { (reinterpret_cast<FuncType*>(arg))(); },
+		    stack, [](void* arg) { (reinterpret_cast<FuncType*>(arg))(); },
 		    (void*)funcPtr);
 	} else {
 		BaseType* functor = stack.push(std::forward<T>(runnable));
 		return impl::_InitThread(
-		    std::move(stack),
-		    [](void* arg) { (*reinterpret_cast<BaseType*>(arg))(); }, functor);
+		    stack, [](void* arg) { (*reinterpret_cast<BaseType*>(arg))(); },
+		    functor);
 	}
 }
 void TaskSwitchIRQ(arch::Context* state);

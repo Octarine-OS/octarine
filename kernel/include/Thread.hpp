@@ -54,8 +54,11 @@ class ThreadStack {
 	using SlotType = typename std::remove_reference<T>::type;
 
   public:
-	ThreadStack(ThreadStack&) = delete;
-	ThreadStack(ThreadStack&& other);
+	/// \todo need to disable copy contructor when Threadstack takes ownership
+	/// of its memory again
+	// ThreadStack(ThreadStack&) = delete;
+	ThreadStack(ThreadStack&) = default;
+	// ThreadStack(ThreadStack&& other);
 
 	template <typename T> SlotType<T>* push(T&& value) {
 		using realT = SlotType<T>;

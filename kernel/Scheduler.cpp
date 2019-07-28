@@ -39,6 +39,7 @@
 #include <string.h>
 #include <type_traits>
 
+#include "e9dump.hpp"
 namespace {
 class ThreadSceduler {};
 
@@ -56,21 +57,25 @@ void EIPHack(arch::Context* state) {
 }
 
 /**
- * Indicates that this is our first task switch
- * /todo This should be factored out
+ * Initialize the scheduler
  */
-bool firstSwitch = true;
+void Scheduler::Init() {
+	// This only makes sense if no other threads exist
+	KASSERT(*currentThread == nullptr);
+	// Allocate a thread which will represent the current execution context
+	Thread* thread = (Thread*)malloc(sizeof(Thread));
+	KASSERT(thread != nullptr);
+	thread->id = 0;
+	all_threads.insert_tail(thread);
+	currentThread = all_threads.begin();
+}
 
 // This gets installed as our interrupt handler
 void Scheduler::TaskSwitchIRQ(arch::Context* state) {
-
-	uint32_t old_eip = state->eip;
+	KASSERT(*currentThread != nullptr);
 
 	// Save state of current thread
-	if (!firstSwitch)
-		currentThread->state = *state;
-	else
-		firstSwitch = false;
+	currentThread->state = *state;
 
 	// Get the next thread to be run
 	// This is boring because it is just round robin scheduling
@@ -95,34 +100,40 @@ static void deathFunction() {
 Thread* Scheduler::impl::_InitThread(ThreadStack stack,
                                      void (*entry)(void* arg), void* arg) {
 	Thread* thread = (Thread*)malloc(sizeof(Thread));
+	KASSERT(thread != nullptr);
 	memset(thread, 0, sizeof(Thread));
 	thread->id = 0xDEADBEEf;
-	thread->state.eip = (uint32_t)entry;
-	// TODO hard coding the segment selectors is a major hack
-	thread->state.cs = 0x08;
+
 	// apparently interrupt handling only saves the code segment. Seems like a
 	// big oversight
 	/*thread->state.ds = 0x10;
 	thread->state.es = 0x10;
 	thread->state.ss*/
 
-	// Set up our stack frame
-	// TODO: should be factored out into arch specific code
 	// Push first arg
 	stack.push(arg);
+
+	// Set up our stack frame
+	// TODO: should be factored out into arch specific code
 	// Add a backstop in case thread returns
 	stack.push(&deathFunction);
+
+	memset(&thread->state, 0, sizeof(arch::Context));
+
+	thread->state.eip = (uint32_t)entry;
+	// TODO hard coding the segment selectors is a major hack
+	thread->state.cs = 0x08;
+	thread->state.esp =
+	    ((uint32_t)stack.top()) -
+	    (sizeof(arch::Context) - offsetof(arch::Context, intNum));
+	thread->state.eflags = 0x200;
 
 	// Add dummy args to make it look like an interrupt frame
 	stack.push(thread->state);
 
-	thread->state.esp = (uint32_t)stack.top();
-	thread->state.eflags = 0x200;
+	thread->stack = stack;
+
 	all_threads.insert_tail(thread);
-	// TODO this is just nasty
-	if (*currentThread == NULL) {
-		currentThread = all_threads.head();
-	}
 
 	KASSERT(*currentThread != nullptr);
 	return thread;

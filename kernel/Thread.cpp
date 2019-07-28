@@ -28,23 +28,28 @@
 
 #include "Thread.hpp"
 
+#include <Octarine.hpp>
 #include <klib.h>
 
+/*
 ThreadStack::ThreadStack(ThreadStack&& other)
     : _base(other._base), _top(other._top) {
-	other._base = nullptr;
-	other._top = nullptr;
+    other._base = nullptr;
+    other._top = nullptr;
 }
+*/
 
 ThreadStack::~ThreadStack() {
 	if (_base != nullptr) {
-		free(_base);
+		/// \todo Need to re-enable this when it isnt broken
+		// free(_base);
 	}
 }
 
 ThreadStack ThreadStack::make(size_t size) {
 	// TODO we need some way of reporting an error
 	void* stackMemory = malloc(size);
+	KASSERT(stackMemory != nullptr);
 	void* top = ((uint8_t*)stackMemory) + size - 4;
 	return ThreadStack(stackMemory, top);
 }
