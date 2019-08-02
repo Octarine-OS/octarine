@@ -29,6 +29,8 @@
 #ifndef __CONFIG_SITE_HPP
 #define __CONFIG_SITE_HPP
 
-#define _LIBCPP_HAS_NO_THREADS
+// This means we should be providing definitions for the api
+// But at the moment we dont use the api so its ok
+#define _LIBCPP_HAS_THREAD_API_EXTERNAL
 
 #endif

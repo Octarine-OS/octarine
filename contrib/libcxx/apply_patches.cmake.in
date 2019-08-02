@@ -25,32 +25,32 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
-set_kernel_flags()
-add_subdirectory(arch)
+# script for applying patches to libcxx
+set(Patch_EXECUTABLE "@Patch_EXECUTABLE@")
+set(patches "@patches@")
+set(tmp_dir "@tmp_dir@")
+set(patch_stamp "@patch_stamp@")
+set(extract_source_dir "@extract_source_dir@")
 
-add_library(kernel STATIC EXCLUDE_FROM_ALL
-	main.cpp
-	mm.cpp
-	panic.cpp
-	Scheduler.cpp
-	terminal.cpp
-	util.cpp
-	IRQManager.cpp
-	Keyboard.cpp
-	PS2Keyboard.cpp
-	Thread.cpp
-)
+set(source_dir "@source_dir@")
 
-target_include_directories(kernel
-	PUBLIC
-		include
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}
-)
-target_link_libraries(kernel
-	arch_kernel
-	klib
-	tlsf
-	arch_includes
-	libcxx
-)
+file(REMOVE_RECURSE "${source_dir}")
+file(COPY "${extract_source_dir}" DESTINATION "@CMAKE_CURRENT_BINARY_DIR@") # TODO relies on knowledge of extract_src_dir
+
+foreach(patch IN LISTS patches)
+	execute_process(
+		COMMAND "${Patch_EXECUTABLE}" -N  -p1
+		INPUT_FILE "${patch}"
+		WORKING_DIRECTORY "${source_dir}"
+		RESULT_VARIABLE patch_rc
+	)
+	if(NOT "${patch_rc}" EQUAL 0)
+		file(REMOVE_RECURSE "${source_dir}")
+		message(SEND_ERROR "Failed to apply libcxx patch '${patch}' (${patch_rc})")
+		return(1)
+	endif()
+endforeach()
+
+
+file(TOUCH "${patch_stamp}")
+	

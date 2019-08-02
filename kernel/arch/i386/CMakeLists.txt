@@ -39,6 +39,8 @@ target_include_directories(arch_kernel
 )
 
 target_link_libraries(arch_kernel
+    PUBLIC
+        libcxx
     PRIVATE
         klib
 )

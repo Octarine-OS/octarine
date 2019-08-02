@@ -25,8 +25,6 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
-include(${CMAKE_CURRENT_LIST_DIR}/libcxx.cmake)
-
 macro(set_kernel_flags)
     set(common_flags
         --target=i686-elf
@@ -45,7 +43,6 @@ macro(set_kernel_flags)
 
     set(cpp_flags
         -D__ELF__
-        -D_LIBCPP_HAS_NO_THREADS
         -fno-c++-static-destructors
         -fno-exceptions
         -fno-rtti
@@ -54,14 +51,7 @@ macro(set_kernel_flags)
 
     set(CMAKE_C_FLAGS "${common_flags} ${CMAKE_C_FLAGS}")
 
-    set(_cxx_stdlib_include "")
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        get_libcpp_include(_libcpp_include)
-        foreach(pth IN LISTS _libcpp_include)
-            set(_cxx_stdlib_include "${_cxx_stdlib_include} -cxx-isystem ${pth}")
-        endforeach()
-    endif()
-    set(CMAKE_CXX_FLAGS "${common_flags} ${cpp_flags} ${_cxx_stdlib_include} ${CMAKE_CXX_FLAGS}" )
+    set(CMAKE_CXX_FLAGS "${common_flags} ${cpp_flags} ${CMAKE_CXX_FLAGS}" )
 endmacro()
 
 if(CMAKE_GENERATOR STREQUAL "Ninja")
