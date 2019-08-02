@@ -46,7 +46,7 @@ template <typename T, ListHook<T> T::*list_data> class ListIterator {
   public:
 	constexpr ListIterator() : elem(nullptr) {}
 
-	ListIterator(T* start) : elem(start) {}
+	constexpr ListIterator(T* start) : elem(start) {}
 
 	ListIterator& operator++() {
 		elem = (elem->*list_data).next;
