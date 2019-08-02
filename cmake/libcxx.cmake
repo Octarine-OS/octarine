@@ -25,6 +25,8 @@
 # SPDX-License-Identifier: BSD-2-Clause
 ################################################################################
 
+find_package(Patch REQUIRED)
+
 # download and extract libc++ return include path in out_var
 function(get_libcpp_include out_var)
 	set(tarball "${CMAKE_BINARY_DIR}/dist/libcxx-8.0.1.src.tar.xz")
@@ -59,12 +61,25 @@ function(get_libcpp_include out_var)
 			COMMAND ${CMAKE_COMMAND} -E tar xJf  "${tarball}" ${file_list}
 			WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
 			RESULT_VARIABLE extract_rc
-			#ECH
 		)
 		if(NOT "${extract_rc}" EQUAL 0)
 			file(REMOVE_RECURSE "${source_dir}")
 			message(FATAL_ERROR "Failed to extract libcxx (${extract_rc})")
 		endif()
+
+		execute_process(
+			COMMAND "${Patch_EXECUTABLE}" -N -i "${CMAKE_SOURCE_DIR}/contrib/libcxx/site_config.patch" "__config"
+			WORKING_DIRECTORY "${source_dir}/include"
+			RESULT_VARIABLE patch_rc
+		)
+		if(NOT "${patch_rc}" EQUAL 0)
+			file(REMOVE_RECURSE "${source_dir}")
+			message(FATAL_ERROR "Failed to apply libcxx patches (${patch_rc})")
+		endif()
+
+		file(INSTALL "${CMAKE_SOURCE_DIR}/contrib/libcxx/__config_site.hpp"
+			DESTINATION "${source_dir}/include"
+		)
 		file(TOUCH "${source_dir}/extract.stamp")
 	endif()
 	set(${out_var} "${source_dir}/include" PARENT_SCOPE)
