@@ -156,7 +156,6 @@ prot_idt:
 	
 ;segment .bss
 
-saved_idt resq 1
-realidt resq 1
-savedSP resq 1
-
+saved_idt dq 0
+realidt dq 0
+savedSP dq 0
