@@ -30,6 +30,7 @@ add_library(arch_kernel OBJECT
     cpumode.asm
     IDT.cpp
     InterruptHandler_asm.asm
+    multiboot.asm
     PIC.cpp
 )
 
@@ -51,4 +52,11 @@ target_include_directories(arch_kernel
     ${octarine_SOURCE_DIR}/kernel
     ${octarine_SOURCE_DIR}/kernel/include
     ${octarine_SOURCE_DIR}/arch/i386/include
+)
+
+# setup linker script for kernel
+set_target_properties(kernel
+    PROPERTIES
+        LINKER_LANGUAGE "ASM_NASM"
+        LINK_FLAGS "-T${CMAKE_CURRENT_SOURCE_DIR}/multiboot.ld -melf_i386"
 )

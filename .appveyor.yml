@@ -11,5 +11,5 @@ build_script:
 - make -j2
 
 artifacts:
-  - path: build/stage2.bin
+  - path: build/kernel.bin
     name: kernel

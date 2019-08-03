@@ -29,5 +29,3 @@ target_include_directories(arch_includes
     INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-
-add_subdirectory(boot)

@@ -26,9 +26,8 @@
 ################################################################################
 
 set_kernel_flags()
-add_subdirectory(arch)
 
-add_library(kernel STATIC EXCLUDE_FROM_ALL
+add_executable(kernel
 	main.cpp
 	mm.cpp
 	panic.cpp
@@ -55,3 +54,10 @@ target_link_libraries(kernel
 	arch_includes
 	libcxx
 )
+
+set_target_properties(kernel
+	PROPERTIES
+	OUTPUT_NAME kernel.bin
+)
+
+add_subdirectory(arch)

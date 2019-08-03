@@ -22,7 +22,7 @@ From the source directory:
     cd build
     cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain-clang.cmake ..
     make
-    qemu-system-i386 -kernel stage2.bin -debugcon stdio
+    qemu-system-i386 -kernel kernel.bin -debugcon stdio
 
 Note:
 If qemu gives you an error along the lines of `Error loading uncompressed kernel without PVH ELF Note`, try adding `-machine type=pc-i440fx-3.1` to the command line
