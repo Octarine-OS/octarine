@@ -37,7 +37,8 @@ void Init();
 namespace impl {
 Thread* _InitThread(ThreadStack stack, void (*entry)(void* arg), void* arg);
 }
-template <typename T> Thread* InitThread(T&& runnable) {
+template <typename T>
+Thread* InitThread(T&& runnable) {
 	static_assert(std::is_invocable<T>::value,
 	              "argument must be an invocable object");
 	// TODO parameterize stack size

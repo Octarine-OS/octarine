@@ -38,8 +38,10 @@
 
 #include <e9dump.hpp>
 
-template <typename T> class TemplateDebugger {
-	template <typename U> class Helper {
+template <typename T>
+class TemplateDebugger {
+	template <typename U>
+	class Helper {
 		int i;
 		char dummy[32];
 		static constexpr size_t sz = sizeof(U);
@@ -60,7 +62,8 @@ class ThreadStack {
 	ThreadStack(ThreadStack&) = default;
 	// ThreadStack(ThreadStack&& other);
 
-	template <typename T> SlotType<T>* push(T&& value) {
+	template <typename T>
+	SlotType<T>* push(T&& value) {
 		using realT = SlotType<T>;
 		static_assert(std::is_trivially_destructible<realT>::value,
 		              "Pushed value must be trivially destructable");

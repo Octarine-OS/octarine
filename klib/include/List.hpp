@@ -31,7 +31,8 @@
 
 //#include <assert.h>
 
-template <typename T> struct ListHook {
+template <typename T>
+struct ListHook {
 	T* prev;
 	T* next;
 	ListHook() {
@@ -40,7 +41,8 @@ template <typename T> struct ListHook {
 	}
 };
 
-template <typename T, ListHook<T> T::*list_data> class ListIterator {
+template <typename T, ListHook<T> T::*list_data>
+class ListIterator {
 	T* elem;
 
   public:
@@ -70,7 +72,8 @@ template <typename T, ListHook<T> T::*list_data> class ListIterator {
 	T* operator->() { return elem; }
 };
 
-template <typename T, ListHook<T> T::*list_data> class List {
+template <typename T, ListHook<T> T::*list_data>
+class List {
 	T* m_head;
 	T* m_tail;
 

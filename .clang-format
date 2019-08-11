@@ -1,4 +1,5 @@
 ---
+AlwaysBreakTemplateDeclarations: 'true'
 BinPackArguments: 'true'
 PointerAlignment: Left
 DerivePointerAlignment: 'false'
