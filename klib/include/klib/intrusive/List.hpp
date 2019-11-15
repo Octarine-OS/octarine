@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, Devin Nakamura
+ * Copyright (c) 2019, Devin Nakamura
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,10 +26,11 @@
  * SPDX-License-Identifier: BSD-2-Clause
  */
 
-#ifndef LIST_HPP
-#define LIST_HPP
+#ifndef KLIB_INTRUSIVE_LIST_HPP
+#define KLIB_INTRUSIVE_LIST_HPP
 
-//#include <assert.h>
+namespace klib {
+namespace intrusive {
 
 template <typename T>
 struct ListHook {
@@ -150,5 +151,7 @@ class List {
 
 	Iterator end() { return Iterator(m_tail); }
 };
+} // namespace intrusive
+} // namespace klib
 
 #endif

@@ -29,8 +29,8 @@
 #ifndef THREAD_HPP
 #define THREAD_HPP
 
-#include "List.hpp"
 #include "machine/Context.hpp"
+#include <klib/intrusive/List.hpp>
 #include <klib_new.hpp>
 #include <stddef.h>
 #include <type_traits>
@@ -95,10 +95,10 @@ class ThreadStack {
 struct Thread {
 	int id;
 	arch::Context state; // TODO rename to context?
-	ListHook<Thread> _listHook;
+	klib::intrusive::ListHook<Thread> _listHook;
 	ThreadStack stack;
 };
 
-typedef List<Thread, &Thread::_listHook> ThreadList;
+typedef klib::intrusive::List<Thread, &Thread::_listHook> ThreadList;
 
 #endif
