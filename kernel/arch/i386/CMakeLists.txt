@@ -27,6 +27,7 @@
 
 add_library(arch_kernel OBJECT
     bioscall.asm
+    CPU.cpp
     cpumode.asm
     IDT.cpp
     InterruptHandler_asm.asm

@@ -88,6 +88,9 @@ void GarbageHandler() {}
 
 Terminal* globalTerm = 0;
 extern "C" void kmain(uint32_t magic, multiboot_info* bootInfo) {
+	// This isn't strictly necissary, but we do it to make sure that the code
+	// knows that interrupts are disabled
+	arch::enterCriticalSection();
 	(void)bootInfo;
 	Terminal term;
 	globalTerm = &term;
@@ -108,11 +111,11 @@ extern "C" void kmain(uint32_t magic, multiboot_info* bootInfo) {
 
 	InitPS2();
 
-	MaskIntr();
+	// MaskIntr();
 	IRQManager::SetHandler(0, GarbageHandler); // IRQ_0 eg 0x20
-	asm("sti");
-	if (false) { // stuff for task switching test code
-		asm("cli");
+
+	if (true) { // stuff for task switching test code
+		// asm("cli");
 		term.printString("Beginning thread test\n");
 		// Scheduler::Init();
 		Scheduler::InitThread(&Thread1Test)->id = 1;
@@ -125,7 +128,7 @@ extern "C" void kmain(uint32_t magic, multiboot_info* bootInfo) {
 
 		// set frequency to approx 20Hz
 		setTimer(59659);
-		asm("sti");
+		arch::exitCriticalSection();
 
 		// Sit in an idle loop
 		// Note due to limitations in the scheduler, once the first task switch
