@@ -39,6 +39,7 @@ add_library(kernel STATIC EXCLUDE_FROM_ALL
 	Keyboard.cpp
 	PS2Keyboard.cpp
 	Thread.cpp
+	klib_support.cpp
 )
 
 target_include_directories(kernel

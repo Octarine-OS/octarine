@@ -32,8 +32,16 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
-BEGIN_DEF
 
+#if __cplusplus >= 201703L
+#define KLIB_NORETURN [[noreturn]]
+#define KLIB_UNUSED [[unused]]
+#define KLIB_FORCEINLINE [[gnu::always_inline]]
+#else
+#define KLIB_FORCEINLINE __attribute__((always_inline))
+#endif
+
+BEGIN_DEF
 void* tlsf_malloc(size_t);
 void tlsf_free(void*);
 void* tlsf_realloc(void*, size_t);
@@ -42,17 +50,21 @@ static inline void free(void* ptr) { tlsf_free(ptr); }
 static inline void* realloc(void* ptr, size_t size) {
 	return tlsf_realloc(ptr, size);
 }
+// This needs to be implemented by consumer
+KLIB_NORETURN void klib_assertion_failed(const char* file, int line,
+                                         const char* function, const char* expr,
+                                         const char* msg);
 END_DEF
 
-#if __cplusplus >= 201703L
-# define KLIB_NORETURN [[noreturn]]
-# define KLIB_UNUSED [[unused]]
-# define KLIB_FORCEINLINE [[gnu::always_inline]]
-#else
-# define KLIB_FORCEINLINE __attribute__((always_inline))
-#endif
+// Hack until we have string formatting in kernel panic
+#define KLIB_FAILED_HACK(f, l, fn, e, m)                                       \
+	klib_assertion_failed("", 0, "", "", f " " fn " " e " " m)
 
+#define KLIB_ASSERT(expr)                                                      \
+	if (!(expr)) {                                                             \
+		KLIB_FAILED_HACK(__FILE__, __LINE__, __func__, #expr, "");             \
+	}
 
-
+#define KLIB_PANIC(msg) KLIB_FAILED_HACK(__FILE__, __LINE__, __func__, "", msg)
 
 #endif
