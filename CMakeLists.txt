@@ -53,9 +53,10 @@ include_directories (${octarine_SOURCE_DIR}/include/)
 # set up some inf
 
 
-add_subdirectory(arch)
-
+# Contrib needs to be first so that other targets can refer to libcxx
 add_subdirectory(contrib)
+
+add_subdirectory(arch)
 
 add_subdirectory(klib)
 add_subdirectory(kernel)
