@@ -115,13 +115,6 @@ static uint8_t ReadData() {
 	outb(0xe9, '\n');
 	return inb(DATA_PORT);
 }
-// TODO This is a gross hack until we get functors online properly
-static void KeyboardIntr() {
-	// TODO assert theKeyboard != nullptr
-	e9_str("\nKIRQ\n");
-	theKeyboard.IRQ();
-	PIC::sendEOI(1);
-}
 
 void PS2Keyboard::IRQ() {
 	uint8_t scancode = inb(DATA_PORT);
@@ -218,8 +211,8 @@ void PS2Keyboard::Init() {
 	WriteCmd(0x60);
 	WriteData(config);
 
-	// TODO super hack
-	IRQManager::SetHandler(1, &KeyboardIntr); // IRQ_1
+	// TODO need a way of notifying the keyboard thread
+	IRQManager::SetHandler(1, []() { theKeyboard.IRQ(); }); // IRQ_1
 	FlushData();
 }
 
